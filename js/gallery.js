@@ -118,23 +118,50 @@ window.filterGallery = function (category) {
     renderGallery(filtered);
 }
 
-// Lightbox Logic
+// Lightbox Logic - Enhanced with keyboard nav + swipe
+let currentLightboxIndex = 0;
+let currentLightboxItems = [];
+
 window.openLightbox = function (id) {
     const item = galleryItems.find(i => i.id === id);
     if (!item) return;
+
+    currentLightboxItems = galleryItems;
+    currentLightboxIndex = galleryItems.findIndex(i => i.id === id);
+
+    renderLightbox(item);
+}
+
+function renderLightbox(item) {
+    // Remove existing lightbox if any
+    const existing = document.getElementById('lightbox');
+    if (existing) existing.remove();
+
+    const totalItems = currentLightboxItems.length;
+    const currentNum = currentLightboxIndex + 1;
 
     const lightbox = document.createElement('div');
     lightbox.id = 'lightbox';
     lightbox.className = 'fixed inset-0 z-[60] bg-brand-dark/95 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in duration-300';
     lightbox.innerHTML = `
-        <button onclick="closeLightbox()" class="absolute top-4 right-4 md:top-8 md:right-8 text-white hover:text-brand-gold transition-colors z-[70]">
+        <button onclick="closeLightbox()" class="absolute top-4 right-4 md:top-8 md:right-8 text-white hover:text-brand-gold transition-colors z-[70]" aria-label="Close">
             <span class="material-symbols-outlined text-4xl">close</span>
         </button>
-        <div class="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center">
-            <img src="${item.src}" alt="${item.title}" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl mb-4 animate-scale-in">
-            <div class="text-center animate-fade-in-up delay-100">
-                <h3 class="text-white font-display font-bold text-3xl mb-1">${item.title}</h3>
+        
+        <!-- Navigation Arrows -->
+        <button onclick="navigateLightbox(-1)" class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white hover:text-brand-gold transition-all hover:scale-110 z-[70]" aria-label="Previous">
+            <span class="material-symbols-outlined text-4xl md:text-5xl">chevron_left</span>
+        </button>
+        <button onclick="navigateLightbox(1)" class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white hover:text-brand-gold transition-all hover:scale-110 z-[70]" aria-label="Next">
+            <span class="material-symbols-outlined text-4xl md:text-5xl">chevron_right</span>
+        </button>
+        
+        <div class="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center" id="lightbox-content">
+            <img src="${item.src}" alt="${item.title}" class="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl mb-4 animate-scale-in" draggable="false">
+            <div class="text-center animate-fade-in-up">
+                <h3 class="text-white font-display font-bold text-2xl md:text-3xl mb-1">${item.title}</h3>
                 <span class="text-brand-gold text-xs font-bold tracking-widest uppercase">${item.category}</span>
+                <p class="text-white/40 text-xs mt-2">${currentNum} / ${totalItems}</p>
             </div>
         </div>
     `;
@@ -147,8 +174,62 @@ window.openLightbox = function (id) {
         if (e.target === lightbox) closeLightbox();
     });
 
-    // Close on Escape key
-    document.addEventListener('keydown', handleEscKey);
+    // Keyboard navigation
+    document.addEventListener('keydown', handleLightboxKeys);
+
+    // Touch/Swipe support
+    setupSwipe(lightbox);
+}
+
+window.navigateLightbox = function (direction) {
+    currentLightboxIndex += direction;
+
+    // Loop around
+    if (currentLightboxIndex < 0) currentLightboxIndex = currentLightboxItems.length - 1;
+    if (currentLightboxIndex >= currentLightboxItems.length) currentLightboxIndex = 0;
+
+    const item = currentLightboxItems[currentLightboxIndex];
+    renderLightbox(item);
+}
+
+function handleLightboxKeys(e) {
+    switch (e.key) {
+        case 'Escape':
+            closeLightbox();
+            break;
+        case 'ArrowLeft':
+            navigateLightbox(-1);
+            break;
+        case 'ArrowRight':
+            navigateLightbox(1);
+            break;
+    }
+}
+
+function setupSwipe(element) {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50;
+
+    element.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    element.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const distance = touchEndX - touchStartX;
+        if (Math.abs(distance) < minSwipeDistance) return;
+
+        if (distance > 0) {
+            navigateLightbox(-1); // Swipe right = previous
+        } else {
+            navigateLightbox(1); // Swipe left = next
+        }
+    }
 }
 
 window.closeLightbox = function () {
@@ -158,13 +239,9 @@ window.closeLightbox = function () {
         setTimeout(() => {
             lightbox.remove();
             document.body.style.overflow = '';
-            document.removeEventListener('keydown', handleEscKey);
+            document.removeEventListener('keydown', handleLightboxKeys);
         }, 300);
     }
-}
-
-function handleEscKey(e) {
-    if (e.key === 'Escape') closeLightbox();
 }
 
 // Init

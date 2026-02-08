@@ -83,13 +83,14 @@
         <div class="relative w-full lg:w-[45%] h-[50vh] lg:h-auto min-h-[500px] lg:min-h-screen bg-gray-100">
             <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUhXBBEBGsZ3lWc2C792ZTlPDFR960eleZCtDDunrGr7HNZePv8Zv0DoHY6Ho8Sr2vQBSPtoVapBixB13vbKA_mGaes6NdNw61PvSN4tHCOu0gBWAb22PKwP3_xjPtKxqPDF1qMn6JI2dUiUN7aagCIC274dhxHUoayy4Hxo0cm2M4j_PQEheGsEgE3rjS_LbIwK_DSr4JQH4CEfeaeyIDk3-NTc47-OhGloxqzddAuf3LN2iKoMitKnfBfdmz167M64KoHDmX_bGj"
                 alt="Photographer Portrait"
-                class="absolute inset-0 w-full h-full object-cover grayscale contrast-110 brightness-90">
+                class="absolute inset-0 w-full h-full object-cover grayscale contrast-110 brightness-90"
+                data-parallax="0.1">
             <div class="absolute inset-0 bg-brand-dark/10 mix-blend-multiply"></div>
         </div>
 
         <!-- Right Content -->
         <div class="w-full lg:w-[55%] flex flex-col justify-center px-8 py-20 md:px-20 lg:px-32 bg-brand-bone">
-            <div class="max-w-xl">
+            <div class="max-w-xl" data-reveal>
                 <div class="flex items-center gap-4 mb-6">
                     <span class="h-[1px] w-12 bg-brand-gold"></span>
                     <span class="text-brand-gold text-xs font-bold tracking-[0.2em] uppercase">The Photographer</span>
@@ -101,7 +102,7 @@
                     between editorial precision and genuine emotion, creating timeless heirlooms for those who value the
                     art of observation. Based in Nairobi, capturing stories worldwide.</p>
                 <hr class="border-t border-brand-gold/30 w-32 mb-10" />
-                <div class="mb-10">
+                <div class="mb-10" data-reveal data-reveal-delay="200">
                     <h3 class="text-brand-gold text-xs font-bold tracking-[0.2em] uppercase mb-3">The Mentor</h3>
                     <p class="text-base font-light text-brand-dark/70 leading-relaxed">Sharing knowledge through curated
                         workshops and one-on-one coaching for aspiring artists looking to refine their craft and master
@@ -151,6 +152,7 @@
 
     <!-- SCRIPTS -->
     <script src="js/app.js"></script>
+    <script src="js/animations.js"></script>
 </body>
 
 </html>

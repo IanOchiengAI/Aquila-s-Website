@@ -132,65 +132,159 @@ body::-webkit-scrollbar {
     }
 }
 
-/* SCALE IN (Lightbox) */
-@keyframes scale-in {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
+/* =========================================
+   SCROLL REVEAL ANIMATIONS
+   ========================================= */
 
-    to {
+/* Base reveal state - hidden */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-reveal="left"] {
+    transform: translateX(-40px);
+}
+
+[data-reveal="right"] {
+    transform: translateX(40px);
+}
+
+[data-reveal="scale"] {
+    transform: scale(0.9);
+}
+
+/* Revealed state */
+[data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+}
+
+/* Stagger children animation */
+[data-stagger]>* {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-stagger]>*.stagger-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Text reveal - clip mask animation */
+[data-text-reveal] {
+    position: relative;
+    overflow: hidden;
+}
+
+[data-text-reveal]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #F9F9F7;
+    transform: translateX(0);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+[data-text-reveal].text-revealed::after {
+    transform: translateX(101%);
+}
+
+/* =========================================
+   FLOATING CTA
+   ========================================= */
+
+.floating-cta {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 40;
+    background: #D4AF37;
+    color: #113827;
+    padding: 1rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.5s ease,
+        background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.floating-cta.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.floating-cta:hover {
+    background: #113827;
+    color: #F9F9F7;
+    transform: translateY(-4px);
+}
+
+/* WhatsApp button */
+.whatsapp-cta {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 40;
+    background: #25D366;
+    color: white;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.5s ease,
+        box-shadow 0.3s ease;
+}
+
+.whatsapp-cta.visible {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.whatsapp-cta:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5);
+}
+
+/* Pulse animation for WhatsApp */
+.whatsapp-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #25D366;
+    animation: pulse-ring 2s ease-out infinite;
+    z-index: -1;
+}
+
+@keyframes pulse-ring {
+    0% {
         transform: scale(1);
-        opacity: 1;
+        opacity: 0.5;
     }
-}
 
-.animate-scale-in {
-    animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
-}
-
-@keyframes fade-in {
-    from {
+    100% {
+        transform: scale(1.5);
         opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-/* SCALE IN (Lightbox) */
-@keyframes scale-in {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.animate-scale-in {
-    animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
     }
 }
 
@@ -233,4 +327,71 @@ body::-webkit-scrollbar {
     pointer-events: none;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+}
+
+/* =========================================
+   MOBILE MENU ANIMATION
+   ========================================= */
+
+#mobile-menu {
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#mobile-menu:not(.hidden) {
+    animation: fade-in 0.3s ease-out;
+}
+
+#mobile-menu .flex-col>a {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+#mobile-menu:not(.hidden) .flex-col>a {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#mobile-menu:not(.hidden) .flex-col>a:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+#mobile-menu:not(.hidden) .flex-col>a:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+#mobile-menu:not(.hidden) .flex-col>a:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+#mobile-menu:not(.hidden) .flex-col>a:nth-child(4) {
+    transition-delay: 0.25s;
+}
+
+/* =========================================
+   TESTIMONIALS
+   ========================================= */
+
+.testimonial-card {
+    background: white;
+    border: 1px solid rgba(17, 56, 39, 0.05);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(17, 56, 39, 0.05);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(17, 56, 39, 0.1);
+}
+
+/* Gallery card hover enhancement */
+.gallery-card {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-card:hover {
+    transform: scale(1.02);
 }
