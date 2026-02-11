@@ -74,10 +74,18 @@ export default function LandingPage() {
         offset: ["start start", "end end"]
     });
 
-    // Active range: 2%→88% of scroll. Minimal dead zone at start, short rest at end.
-    // -78% ensures ALL 4 cards + Archive endpoint are visible before unpinning.
-    const baseTranslateX = useTransform(scrollYProgress, [0.02, 0.88], ["0%", "-78%"]);
+    // ─── Horizontal Scroll Config ───
+    // 1. Entrance Phase (0% - 12%): Cards rise from below and scale up
+    // 2. Scroll Phase (12% - 95%): Cards slide horizontally
+    const entranceY = useTransform(scrollYProgress, [0, 0.12], ["20vh", "0vh"]);
+    const entranceScale = useTransform(scrollYProgress, [0, 0.12], [0.85, 1]);
+    const entranceOpacity = useTransform(scrollYProgress, [0, 0.08], [0, 1]);
+
+    const baseTranslateX = useTransform(scrollYProgress, [0.12, 0.95], ["0%", "-78%"]);
     const x = useSpring(baseTranslateX, { stiffness: 300, damping: 60 });
+    const y = useSpring(entranceY, { stiffness: 300, damping: 60 });
+    const scale = useSpring(entranceScale, { stiffness: 300, damping: 60 });
+    const opacity = useSpring(entranceOpacity, { stiffness: 300, damping: 60 });
 
     // Hero Parallax
     const { scrollY } = useScroll();
@@ -204,7 +212,7 @@ export default function LandingPage() {
             {/* ─── Horizontal Scroll Series ─── */}
             <section ref={horizontalRef} id="featured" className="relative h-[800vh] bg-background">
                 <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-                    <motion.div style={{ x }} className="flex gap-20 px-24 items-center">
+                    <motion.div style={{ x, y, scale, opacity }} className="flex gap-20 px-24 items-center will-change-transform">
                         {/* Intro Lead */}
                         <motion.div
                             initial="hidden"
@@ -308,29 +316,23 @@ export default function LandingPage() {
                         </motion.div>
 
                         <motion.div variants={staggerItem} className="flex flex-wrap gap-2.5">
-                            {categories.map((cat) => (
-                                <button
+                            {categories.filter(c => c !== "ALL").map((cat) => (
+                                <Link
                                     key={cat}
-                                    onClick={() => setActiveCategory(cat)}
-                                    className={`px-7 py-3 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 border ${activeCategory === cat
-                                        ? "bg-foreground text-background border-foreground shadow-[0_15px_30px_rgba(0,0,0,0.1)]"
-                                        : "bg-black/[0.03] border-transparent text-foreground/40 hover:bg-black/[0.06] hover:text-foreground/60"
-                                        }`}
-                                    aria-label={`Filter by ${cat}`}
+                                    href={`/work/${cat.toLowerCase()}`}
+                                    className="px-7 py-3 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 bg-black/[0.03] border border-transparent text-foreground/40 hover:bg-black/[0.06] hover:text-foreground/60 hover:scale-105 active:scale-95"
                                 >
                                     {cat}
-                                </button>
+                                </Link>
                             ))}
                         </motion.div>
                     </motion.div>
 
-                    {/* Grid */}
+                    {/* Grid - Showing "Latest" or "Featured" (Slice first 6) */}
                     <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        <AnimatePresence mode="popLayout">
-                            {filteredGalleries.map((item, idx) => (
-                                <RepositoryCard key={item.id} item={item} idx={idx} />
-                            ))}
-                        </AnimatePresence>
+                        {galleries.slice(0, 6).map((item, idx) => (
+                            <RepositoryCard key={item.id} item={item} idx={idx} />
+                        ))}
                     </motion.div>
                 </div>
             </section>
@@ -402,32 +404,34 @@ function HorizontalCard({ src, title, category, location, idx }: { src: string, 
             transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="flex-shrink-0 w-[65vw] md:w-[45vw] max-w-[850px]"
         >
-            <motion.div
-                whileHover={{ y: -8 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="group relative aspect-[14/9] overflow-hidden rounded-[3rem] gold-glow shadow-[0_30px_80px_rgba(0,0,0,0.06)] transition-all duration-700"
-            >
-                <div className="absolute inset-0 overflow-hidden rounded-[3rem]">
-                    <Image
-                        src={src}
-                        alt={title}
-                        fill
-                        className="object-cover transition-transform duration-[2.5s] group-hover:scale-110"
-                    />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-12 flex flex-col justify-end">
-                    <motion.span
-                        initial={{ x: -20, opacity: 0 }}
-                        whileInView={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.5 }}
-                        className="text-brand-gold-light text-[10px] tracking-[0.4em] uppercase font-black mb-4 inline-block"
-                    >
-                        {category}
-                    </motion.span>
-                    <h3 className="text-4xl md:text-5xl font-bold mb-3 text-white tracking-tight">{title}</h3>
-                    <p className="text-white/50 text-sm md:text-base font-medium tracking-wide">{location}</p>
-                </div>
-            </motion.div>
+            <Link href={`/work/${category.toLowerCase()}`} className="block">
+                <motion.div
+                    whileHover={{ y: -8 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    className="group relative aspect-[14/9] overflow-hidden rounded-[3rem] gold-glow shadow-[0_30px_80px_rgba(0,0,0,0.06)] transition-all duration-700"
+                >
+                    <div className="absolute inset-0 overflow-hidden rounded-[3rem]">
+                        <Image
+                            src={src}
+                            alt={title}
+                            fill
+                            className="object-cover transition-transform duration-[2.5s] group-hover:scale-110"
+                        />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-12 flex flex-col justify-end">
+                        <motion.span
+                            initial={{ x: -20, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                            className="text-brand-gold-light text-[10px] tracking-[0.4em] uppercase font-black mb-4 inline-block"
+                        >
+                            {category}
+                        </motion.span>
+                        <h3 className="text-4xl md:text-5xl font-bold mb-3 text-white tracking-tight">{title}</h3>
+                        <p className="text-white/50 text-sm md:text-base font-medium tracking-wide">{location}</p>
+                    </div>
+                </motion.div>
+            </Link>
         </motion.div>
     );
 }

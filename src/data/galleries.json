@@ -2,7 +2,7 @@
     {
         "id": "nairobi-noir",
         "title": "Nairobi Noir",
-        "category": "URBAN",
+        "category": "DOCUMENTARY",
         "subtitle": "Urban / Documentary",
         "cover": "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1000&q=80&auto=format",
         "date": "2025",
@@ -41,7 +41,7 @@
     {
         "id": "golden-savanna",
         "title": "Golden Savanna",
-        "category": "LANDSCAPE",
+        "category": "WILDLIFE",
         "subtitle": "Landscape / Nature",
         "cover": "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1000&q=80&auto=format",
         "date": "2024",
@@ -54,7 +54,7 @@
     {
         "id": "haute-couture",
         "title": "Haute Couture",
-        "category": "FASHION",
+        "category": "EDITORIAL",
         "subtitle": "Fashion / Editorial",
         "cover": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1000&q=80&auto=format",
         "date": "2024",
@@ -93,7 +93,7 @@
     {
         "id": "nairobi-skyline",
         "title": "Nairobi Skyline",
-        "category": "LANDSCAPE",
+        "category": "ARCHITECTURAL",
         "subtitle": "Urban / Landscape",
         "cover": "https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=1000&q=80&auto=format",
         "date": "2024",
@@ -106,7 +106,7 @@
     {
         "id": "editorial",
         "title": "Editorial",
-        "category": "FASHION",
+        "category": "EDITORIAL",
         "subtitle": "Fashion / Arts",
         "cover": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=80&auto=format",
         "date": "2024",
