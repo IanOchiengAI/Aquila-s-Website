@@ -38,8 +38,8 @@ export default function LandingPage() {
         offset: ["start start", "end end"]
     });
 
-    // Calculate X transform - Zero-gap start with a subtle "sticky" hold at the beginning (0 to 0.1)
-    const baseTranslateX = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-65%"]);
+    // Calculate X transform - Zero-gap start with a generous "sticky" hold at the beginning and end (0.2 to 0.8)
+    const baseTranslateX = useTransform(scrollYProgress, [0.2, 0.8], ["0%", "-65%"]);
     const x = useSpring(baseTranslateX, { stiffness: 400, damping: 90 });
 
     // Hero Parallax
@@ -48,11 +48,11 @@ export default function LandingPage() {
     const heroImageY = useTransform(scrollY, [0, 500], [0, 50]);
 
     return (
-        <div className="bg-background text-foreground selection:bg-brand-gold selection:text-white font-sans overflow-x-hidden foggy-depth">
+        <div className="bg-background text-foreground selection:bg-brand-gold selection:text-white font-sans foggy-depth">
             <CustomCursor />
             <ScrollProgress />
 
-            {/* Navigation - Foggy White Mac Style */}
+            {/* ... Existing Nav ... */}
             <motion.nav
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
@@ -140,8 +140,8 @@ export default function LandingPage() {
                 </motion.div>
             </section>
 
-            {/* Horizontal Scroll Series - Adjusted transform range to fix "white gap" */}
-            <section ref={horizontalRef} id="featured" className="relative h-[450vh] bg-background">
+            {/* Horizontal Scroll Series - Increased sequence height for longer pinning */}
+            <section ref={horizontalRef} id="featured" className="relative h-[600vh] bg-background">
                 <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-b from-background via-white/[0.2] to-background">
                     <motion.div style={{ x }} className="flex gap-20 px-24 items-center">
                         {/* Intro Lead */}
