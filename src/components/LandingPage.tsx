@@ -8,12 +8,14 @@ import { ArrowRight, Globe, Camera, ShoppingBag, Sparkles, ChevronDown, Calendar
 import galleries from "@/data/galleries.json";
 
 // ─── Animation Variants ───
+const ease = [0.22, 1, 0.36, 1] as const;
+
 const sectionReveal = {
     hidden: { opacity: 0, y: 60 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.9, ease: "easeOut" as const },
     },
 };
 
@@ -33,7 +35,7 @@ const staggerItem = {
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.7, ease: "easeOut" as const },
     },
 };
 
@@ -42,7 +44,7 @@ const scaleIn = {
     visible: {
         opacity: 1,
         scale: 1,
-        transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.8, ease: "easeOut" as const },
     },
 };
 
@@ -51,7 +53,7 @@ const slideUp = {
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.8, ease: "easeOut" as const },
     },
 };
 
@@ -72,8 +74,10 @@ export default function LandingPage() {
         offset: ["start start", "end end"]
     });
 
-    const baseTranslateX = useTransform(scrollYProgress, [0.15, 0.65], ["0%", "-65%"]);
-    const x = useSpring(baseTranslateX, { stiffness: 400, damping: 90 });
+    // Active range: 2%→88% of scroll. Minimal dead zone at start, short rest at end.
+    // -78% ensures ALL 4 cards + Archive endpoint are visible before unpinning.
+    const baseTranslateX = useTransform(scrollYProgress, [0.02, 0.88], ["0%", "-78%"]);
+    const x = useSpring(baseTranslateX, { stiffness: 300, damping: 60 });
 
     // Hero Parallax
     const { scrollY } = useScroll();
