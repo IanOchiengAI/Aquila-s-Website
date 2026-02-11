@@ -28,7 +28,22 @@ const itemAnim = {
     },
 };
 
-export default function GalleryView({ items, category }: { items: any[], category: string }) {
+// ─── Grid Variants ───
+type GridVariant = "editorial" | "archival" | "cinema";
+
+const gridStyles: Record<GridVariant, string> = {
+    editorial: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[400px]",
+    archival: "grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[300px]",
+    cinema: "grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-12 auto-rows-[500px]",
+};
+
+const cardStyles: Record<GridVariant, string> = {
+    editorial: "rounded-[2rem]",
+    archival: "rounded-xl",
+    cinema: "rounded-sm",
+};
+
+export default function GalleryView({ items, category, variant = "editorial" }: { items: any[], category: string, variant?: GridVariant }) {
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
@@ -54,7 +69,7 @@ export default function GalleryView({ items, category }: { items: any[], categor
             </nav>
 
             {/* Hero Header */}
-            <header className="pt-48 pb-24 px-6 md:px-12 text-center relative overflow-hidden">
+            <header className="pt-32 pb-24 md:pt-48 px-6 md:px-12 text-center relative overflow-hidden">
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -69,18 +84,19 @@ export default function GalleryView({ items, category }: { items: any[], categor
             </header>
 
             {/* Creative Grid */}
-            <section className="px-4 md:px-12 max-w-[1600px] mx-auto">
+            <section className="px-4 md:px-12 max-w-[1800px] mx-auto">
                 <motion.div
                     variants={staggerContainer}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[400px]"
+                    className={`grid ${gridStyles[variant]}`}
                 >
-                    {items.map((item: any, idx: number) => (
+                    {items.map((item: any) => (
                         <motion.div
                             key={item.id}
                             variants={itemAnim}
-                            className={`group relative rounded-[2rem] overflow-hidden bg-black/[0.02] cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-700 ${item.wide ? "md:col-span-2 lg:col-span-2" : "md:col-span-1"}`}
+                            className={`group relative overflow-hidden bg-black/[0.02] cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-700 ${cardStyles[variant]} ${item.wide && variant !== "archival" ? "md:col-span-2" : "md:col-span-1"
+                                }`}
                         >
                             <Image
                                 src={item.cover}

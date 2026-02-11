@@ -140,7 +140,7 @@ export default function LandingPage() {
             {/* ─── Hero Section ─── */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <motion.div style={{ y: heroImageY }} className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-background z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-background z-10" />
                     <Image
                         src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80&auto=format"
                         alt="Hero Background"
@@ -157,37 +157,37 @@ export default function LandingPage() {
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.8, delay: 0.8, ease: ease }}
                         className="text-[11px] tracking-[0.5em] uppercase text-brand-gold mb-8 font-black"
                     >
-                        Nairobi &middot; Kenya
+                        Nairobi &middot; Global
                     </motion.p>
                     <motion.h1
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, delay: 1, ease: [0.22, 1, 0.36, 1] }}
-                        className="font-serif text-6xl md:text-[9rem] font-bold leading-[0.9] mb-12 tracking-tighter"
+                        transition={{ duration: 1, delay: 1, ease: ease }}
+                        className="font-display text-6xl md:text-[10rem] font-black leading-[0.85] mb-10 tracking-tighter uppercase"
                     >
-                        Defining <br />
-                        <span className="gold-shimmer italic font-serif">Simplicity.</span>
+                        THE <br />
+                        <span className="gold-shimmer font-serif italic capitalize">Unseen.</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="max-w-xl mx-auto text-foreground/50 text-base md:text-xl font-light leading-relaxed mb-14 text-balance"
+                        transition={{ duration: 0.8, delay: 1.3, ease: ease }}
+                        className="max-w-xl mx-auto text-foreground/60 text-base md:text-lg font-light leading-relaxed mb-12 text-balance"
                     >
-                        Artisanal photography that uncovers the raw elegance in every frame. We don&apos;t just take photos; we craft legacies.
+                        We don&apos;t just capture moments; we craft visual legacies. A study in light, shadow, and the raw elegance of the human experience.
                     </motion.p>
 
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 1.6, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.8, delay: 1.6, ease: ease }}
                         className="flex justify-center gap-6"
                     >
-                        <Link href="#featured" className="group px-12 py-5 bg-foreground text-background rounded-full font-bold text-[12px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all duration-300 shadow-2xl flex items-center gap-3">
-                            The Gallery
+                        <Link href="#featured" className="group px-12 py-4 bg-foreground text-background rounded-full font-bold text-[11px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all duration-300 shadow-2xl flex items-center gap-3">
+                            Explore Works
                             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </motion.div>
@@ -210,21 +210,21 @@ export default function LandingPage() {
             </section>
 
             {/* ─── Horizontal Scroll Series ─── */}
-            <section ref={horizontalRef} id="featured" className="relative h-[800vh] bg-background">
+            <section ref={horizontalRef} id="featured" className="relative h-[600vh] bg-background">
                 <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-                    <motion.div style={{ x, y, scale, opacity }} className="flex gap-20 px-24 items-center will-change-transform">
+                    <motion.div style={{ x, y, scale, opacity }} className="flex gap-16 px-12 md:px-24 items-center will-change-transform">
                         {/* Intro Lead */}
                         <motion.div
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
                             variants={staggerContainer}
-                            className="flex-shrink-0 w-[500px]"
+                            className="flex-shrink-0 w-[400px] md:w-[500px]"
                         >
-                            <motion.span variants={staggerItem} className="text-brand-gold text-[10px] font-black tracking-[0.4em] uppercase block mb-6">Discovery</motion.span>
-                            <motion.h2 variants={staggerItem} className="text-6xl md:text-8xl font-display font-black tracking-tighter mb-8 uppercase leading-none text-foreground/90">THE <br /> SERIES.</motion.h2>
-                            <motion.p variants={staggerItem} className="text-foreground/40 text-xl max-w-sm leading-relaxed font-light text-balance">
-                                Our most significant collections, captured with uncompromising vision.
+                            <motion.span variants={staggerItem} className="text-brand-gold text-[10px] font-black tracking-[0.4em] uppercase block mb-6">Curated</motion.span>
+                            <motion.h2 variants={staggerItem} className="text-5xl md:text-8xl font-display font-black tracking-tighter mb-6 uppercase leading-none text-foreground/90">Master<br />Pieces.</motion.h2>
+                            <motion.p variants={staggerItem} className="text-foreground/50 text-lg max-w-sm leading-relaxed font-light text-balance">
+                                A selection of our most defining work. Evidence of our obsession with detail.
                             </motion.p>
                         </motion.div>
 
@@ -259,16 +259,16 @@ export default function LandingPage() {
                         />
 
                         {/* End Point */}
-                        <div className="flex-shrink-0 w-[400px] flex flex-col items-center">
+                        <div className="flex-shrink-0 w-[300px] flex flex-col items-center">
                             <Link href="#work" className="group flex flex-col items-center text-center">
                                 <motion.div
                                     whileHover={{ scale: 1.15, rotate: 90 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                    className="w-28 h-28 rounded-full glass-card gold-glow flex items-center justify-center"
+                                    className="w-24 h-24 rounded-full glass-card gold-glow flex items-center justify-center"
                                 >
-                                    <ArrowRight size={28} className="text-foreground/40 group-hover:text-brand-gold transition-colors duration-300" />
+                                    <ArrowRight size={24} className="text-foreground/40 group-hover:text-brand-gold transition-colors duration-300" />
                                 </motion.div>
-                                <span className="mt-8 text-[11px] font-black tracking-[0.4em] uppercase text-foreground/20 group-hover:text-brand-gold transition-colors duration-300">Archive</span>
+                                <span className="mt-6 text-[10px] font-black tracking-[0.4em] uppercase text-foreground/20 group-hover:text-brand-gold transition-colors duration-300">View All</span>
                             </Link>
                         </div>
                     </motion.div>
@@ -276,31 +276,31 @@ export default function LandingPage() {
             </section>
 
             {/* ─── Philosophy Quote ─── */}
-            <RevealSection className="py-48 md:py-72 bg-gradient-to-b from-background via-white/40 to-background border-y border-black/[0.02]">
-                <div className="max-w-5xl mx-auto px-8 text-center">
+            <RevealSection className="py-24 md:py-32 bg-gradient-to-b from-background via-white/40 to-background border-y border-black/[0.02]">
+                <div className="max-w-4xl mx-auto px-8 text-center">
                     <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                        className="text-brand-gold text-[10px] font-black tracking-[0.6em] uppercase mb-20 block"
+                        transition={{ duration: 0.6, ease: ease }}
+                        className="text-brand-gold text-[10px] font-black tracking-[0.6em] uppercase mb-12 block"
                     >
-                        Philosophy
+                        Ethos
                     </motion.span>
                     <motion.h2
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.4 }}
-                        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-                        className="text-4xl md:text-7xl font-serif italic text-foreground/70 leading-[1.2] tracking-tight"
+                        transition={{ duration: 1.2, ease: ease, delay: 0.15 }}
+                        className="text-3xl md:text-6xl font-serif italic text-foreground/80 leading-[1.3] tracking-tight"
                     >
-                        &quot;To find the extraordinary within the mundane is the photographer&apos;s greatest achievement.&quot;
+                        &quot;Art is not what you see, but what you make others feel.&quot;
                     </motion.h2>
                 </div>
             </RevealSection>
 
             {/* ─── Repository Grid ─── */}
-            <section id="work" className="py-40 px-6 md:px-12 bg-background">
+            <section id="work" className="py-24 px-6 md:px-12 bg-background">
                 <div className="max-w-7xl mx-auto">
                     {/* Header */}
                     <motion.div
@@ -308,11 +308,11 @@ export default function LandingPage() {
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.3 }}
                         variants={staggerContainer}
-                        className="flex flex-col md:flex-row justify-between items-baseline mb-24 gap-8"
+                        className="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-8"
                     >
                         <motion.div variants={staggerItem}>
                             <span className="text-brand-gold text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Archive</span>
-                            <h2 className="text-5xl md:text-[5.5rem] font-display font-black tracking-tighter uppercase leading-none">THE <span className="gold-shimmer font-serif italic">REPOS</span></h2>
+                            <h2 className="text-5xl md:text-[5.5rem] font-display font-black tracking-tighter uppercase leading-none">THE <span className="gold-shimmer font-serif italic">VOLUMES</span></h2>
                         </motion.div>
 
                         <motion.div variants={staggerItem} className="flex flex-wrap gap-2.5">
@@ -338,7 +338,7 @@ export default function LandingPage() {
             </section>
 
             {/* ─── Services ─── */}
-            <RevealSection className="py-40 bg-gradient-to-b from-background via-white/20 to-background">
+            <RevealSection className="py-24 bg-gradient-to-b from-background via-white/20 to-background">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
@@ -346,10 +346,10 @@ export default function LandingPage() {
                     variants={staggerContainer}
                     className="max-w-7xl mx-auto px-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-10"
                 >
-                    <TiltCard title="Weddings" desc="Documenting love with cinematic nuance and technical grace." icon={<Camera size={20} />} idx={0} />
-                    <TiltCard title="Branding" desc="Elevating identity through high-precision visual storytelling." icon={<Globe size={20} />} idx={1} />
-                    <TiltCard title="Editorial" desc="Cutting-edge fashion imagery for the modern artisan." icon={<ShoppingBag size={20} />} idx={2} />
-                    <TiltCard title="Fine Art" desc="Exploring the soul of the landscape through art." icon={<Sparkles size={20} />} idx={3} />
+                    <TiltCard title="Weddings" desc="Unscripted. Timeless. Yours. Capturing the raw emotion of union." icon={<Camera size={20} />} idx={0} />
+                    <TiltCard title="Branding" desc="Identity in high definition. Visual authority for the modern era." icon={<Globe size={20} />} idx={1} />
+                    <TiltCard title="Editorial" desc="Avant-garde storytelling. Where fashion meets fine art." icon={<ShoppingBag size={20} />} idx={2} />
+                    <TiltCard title="Fine Art" desc="The soul of the landscape. Silence captured in frame." icon={<Sparkles size={20} />} idx={3} />
                 </motion.div>
             </RevealSection>
 
