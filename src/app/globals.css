@@ -3,15 +3,29 @@
 @theme {
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
-  --color-background: #f5f5f7;
+  --color-background: #fbfbfd;
   --color-foreground: #1d1d1f;
-  --color-brand-gold: #c39b1a;
+  --color-brand-gold: #b58d10;
   --color-brand-gray: #86868b;
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.04);
 }
 
 /* Custom Utilities */
+.foggy-depth {
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 247, 1) 100%);
+  position: relative;
+}
+
+.foggy-depth::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
+  opacity: 0.02;
+  pointer-events: none;
+}
+
 .text-balance {
   text-wrap: balance;
 }

@@ -38,8 +38,9 @@ export default function LandingPage() {
         offset: ["start start", "end end"]
     });
 
-    // Calculate X transform - Added stability at the start and end by compressing the active range
-    const x = useTransform(scrollYProgress, [0.1, 0.9], ["0%", "-65%"]);
+    // Calculate X transform - Zero-gap start with a subtle "sticky" hold at the beginning (0 to 0.1)
+    const baseTranslateX = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-65%"]);
+    const x = useSpring(baseTranslateX, { stiffness: 400, damping: 90 });
 
     // Hero Parallax
     const { scrollY } = useScroll();
@@ -47,7 +48,7 @@ export default function LandingPage() {
     const heroImageY = useTransform(scrollY, [0, 500], [0, 50]);
 
     return (
-        <div className="bg-background text-foreground selection:bg-brand-gold selection:text-white font-sans overflow-x-hidden">
+        <div className="bg-background text-foreground selection:bg-brand-gold selection:text-white font-sans overflow-x-hidden foggy-depth">
             <CustomCursor />
             <ScrollProgress />
 
@@ -56,33 +57,33 @@ export default function LandingPage() {
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.8, ease: "circOut" }}
-                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-7xl glass-card rounded-3xl flex items-center justify-between px-8 py-3"
+                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-7xl glass-card rounded-[2rem] flex items-center justify-between px-10 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.02)]"
             >
                 <div className="flex items-center gap-12">
                     <span className="text-xl font-display font-black tracking-widest uppercase">
                         OYANGE
                     </span>
-                    <div className="hidden lg:flex gap-8 text-[11px] font-bold tracking-[0.15em] uppercase text-foreground/40">
+                    <div className="hidden lg:flex gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-foreground/40">
                         <Link href="#featured" className="hover:text-foreground transition-all">Series</Link>
                         <Link href="#work" className="hover:text-foreground transition-all">Archive</Link>
                         <Link href="#" className="hover:text-foreground transition-all">Studios</Link>
                     </div>
                 </div>
 
-                {/* Mac-Style Search Bar */}
-                <div className="hidden md:flex flex-1 max-w-md mx-8">
+                {/* Mac-Style Search Bar - Refined contrast */}
+                <div className="hidden md:flex flex-1 max-w-lg mx-8">
                     <div className="relative w-full group">
-                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/30 group-focus-within:text-brand-gold transition-colors" />
+                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-brand-gold transition-colors" />
                         <input
                             type="text"
-                            placeholder="Search works..."
-                            className="w-full bg-black/[0.03] border border-black/5 rounded-full py-2.5 pl-11 pr-4 text-[13px] font-medium outline-none focus:ring-2 focus:ring-brand-gold/10 focus:border-brand-gold/20 transition-all placeholder:text-foreground/20"
+                            placeholder="Search images, series, studios..."
+                            className="w-full bg-black/[0.04] border border-black/5 rounded-2xl py-2.5 pl-11 pr-4 text-[13px] font-medium outline-none focus:bg-white focus:ring-4 focus:ring-brand-gold/5 focus:border-brand-gold/10 transition-all placeholder:text-foreground/20 shadow-inner"
                         />
                     </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <button className="hidden sm:flex px-5 py-2.5 bg-foreground text-background rounded-full font-bold text-[11px] uppercase tracking-wider hover:scale-105 transition-all shadow-md">
+                    <button className="hidden sm:flex px-6 py-2.5 bg-foreground text-background rounded-full font-bold text-[11px] uppercase tracking-wider hover:scale-105 transition-all shadow-md">
                         Contact
                     </button>
                     <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 hover:bg-black/5 rounded-full transition-all md:hidden" aria-label="Toggle Menu">
@@ -94,7 +95,7 @@ export default function LandingPage() {
             {/* Hero Section - Airy & Light */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <motion.div style={{ y: heroImageY }} className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-background z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-background z-10" />
                     <Image
                         src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80&auto=format"
                         alt="Hero Background"
@@ -119,35 +120,35 @@ export default function LandingPage() {
                     </motion.p>
                     <motion.h1
                         variants={fadeInUp}
-                        className="font-serif text-6xl md:text-9xl font-bold leading-[1] mb-10 tracking-tight text-foreground"
+                        className="font-serif text-6xl md:text-[9rem] font-bold leading-[0.9] mb-12 tracking-tighter text-foreground"
                     >
                         Defining <br />
                         <span className="italic text-brand-gold font-serif">Simplicity.</span>
                     </motion.h1>
                     <motion.p
                         variants={fadeInUp}
-                        className="max-w-xl mx-auto text-foreground/60 text-base md:text-xl font-light leading-relaxed mb-10 text-balance"
+                        className="max-w-xl mx-auto text-foreground/50 text-base md:text-xl font-light leading-relaxed mb-12 text-balance"
                     >
                         Artisanal photography that uncovers the raw elegance in every frame. We don&apos;t just take photos; we craft legacies.
                     </motion.p>
 
                     <motion.div variants={fadeInUp} className="flex justify-center gap-6">
-                        <Link href="#featured" className="px-10 py-4 bg-foreground text-background rounded-full font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl">
+                        <Link href="#featured" className="px-12 py-5 bg-foreground text-background rounded-full font-bold text-[12px] uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-2xl">
                             The Gallery
                         </Link>
                     </motion.div>
                 </motion.div>
             </section>
 
-            {/* Horizontal Scroll Series - Enhanced Stability & "Wow" Pinning */}
-            <section ref={horizontalRef} id="featured" className="relative h-[500vh] bg-background">
-                <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+            {/* Horizontal Scroll Series - Adjusted transform range to fix "white gap" */}
+            <section ref={horizontalRef} id="featured" className="relative h-[450vh] bg-background">
+                <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-b from-background via-white/[0.2] to-background">
                     <motion.div style={{ x }} className="flex gap-20 px-24 items-center">
                         {/* Intro Lead */}
                         <div className="flex-shrink-0 w-[500px]">
                             <span className="text-brand-gold text-[10px] font-black tracking-[0.4em] uppercase block mb-6">Discovery</span>
-                            <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter mb-8 uppercase leading-none">THE <br /> SERIES.</h2>
-                            <p className="text-foreground/50 text-xl max-w-sm leading-relaxed font-light text-balance">
+                            <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter mb-8 uppercase leading-none text-foreground/90">THE <br /> SERIES.</h2>
+                            <p className="text-foreground/40 text-xl max-w-sm leading-relaxed font-light text-balance">
                                 Our most significant collections, captured with uncompromising vision.
                             </p>
                         </div>
@@ -216,8 +217,8 @@ export default function LandingPage() {
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     className={`px-7 py-3 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-300 border ${activeCategory === cat
-                                            ? "bg-foreground text-background border-foreground shadow-[0_15px_30px_rgba(0,0,0,0.1)]"
-                                            : "bg-black/[0.03] border-transparent text-foreground/40 hover:bg-black/[0.06]"
+                                        ? "bg-foreground text-background border-foreground shadow-[0_15px_30px_rgba(0,0,0,0.1)]"
+                                        : "bg-black/[0.03] border-transparent text-foreground/40 hover:bg-black/[0.06]"
                                         }`}
                                     aria-label={`Filter by ${cat}`}
                                 >
