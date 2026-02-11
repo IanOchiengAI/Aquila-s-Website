@@ -22,8 +22,8 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "AQUILA | Premium Digital Experience",
-  description: "A cinematic journey through Pulse Creative.",
+  title: "OYANGE | Premium Digital Experience",
+  description: "A cinematic digital experience by OYANGE.",
 };
 
 export default function RootLayout({

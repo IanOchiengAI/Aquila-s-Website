@@ -4,64 +4,12 @@
         "title": "Nairobi Noir",
         "category": "URBAN",
         "subtitle": "Urban / Documentary",
-        "cover": "https://lh3.googleusercontent.com/aida-public/AB6AXuDB-QrgNT3CKLOCbdAdzCaPhi4-46DOuOJg0o9JuveaWSTAYpC5zIw-76gi2il64KWUyRPPsucwatnxqrjKJPCx2L3gY_ELSzyCrM79R9jAel60_2BavHQtzUUMmeRibgdV66nbdjftXOG1EpVGBovtU0NRMnO46Q4DvdyNHCWFCAHdqtjRngo0zvhnoYFpuxdvslqtkuaHSY97ODaBA_x9u6LR9amRB0w1-mnsURwBEhdgcYj9W2urKve_Q2o9DM7VmZdcr_n5xj1B",
+        "cover": "https://images.unsplash.com/photo-1493397212122-2b85def82823?w=1400&q=80&auto=format",
         "date": "2025",
         "location": "Nairobi, Kenya",
         "services": "Photography, Creative Direction",
         "description": "An exploration of the city's duality - where the organic chaos of nature meets the structured rhythm of urban life.",
-        "content": [
-            {
-                "type": "text",
-                "value": "Nairobi is a city of layers. Beneath the concrete and the commotion lies a pulse that is distinctly primal, a reminder of the land that held us long before the skyscrapers did."
-            },
-            {
-                "type": "text",
-                "value": "\"Nairobi Noir\" is an attempt to strip away the color and noise, focusing strictly on light, shadow, and form. Shot entirely in black and white (with subtle color grading in post), the series looks at the interplay between the city's inhabitants and its rapidly changing environment."
-            },
-            {
-                "type": "text",
-                "value": "From the misty mornings in Karura Forest to the frenetic energy of the CBD at dusk, we aimed to capture the silent moments that often go unnoticed. The mood is intentionally somber yet hopeful, reflecting the resilience of the people who call this metropolis home."
-            },
-            {
-                "type": "full-image",
-                "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuDFv4h0f9lO_nD_zx32wyegHi0ftPwajmzqZXQwWcHbhNC_WCgjyp8s5JNNSogfG32VLfMp70fnSeREftwmSSEiCCqYAzydfBTRptk900wZTvbpeHY4GM1WJJdhPQ5-gv7QIjt98n82-VdyrKL5VxPlts60c4GDArG8zZ9ovEUyl1nxl8CtFdUy73PnHKQEqrmJWuN0vb9loOjeS_tv9JPDx7UsMvyVrWKazxh5WXvTrWZIzUr4fxNyCZ7dAhKF8uAC6wFlm8aT-3gw",
-                "alt": "Cinematic Landscape"
-            },
-            {
-                "type": "grid",
-                "columns": 2,
-                "images": [
-                    {
-                        "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuAL6lG3_EwfQHV9zH2fcjoZgjM44CwYwv8l2yHqIPCJCBK5wA3dxDD5M51W2LAoHj0j36yD0YbOePtP5mo5YI7VDNplqFCxmtmYH5uqs89Wrv9QQ8K-iWFfIWoGQ8262Y-xRlO6cpnJA7txwW2X5Dx-kqMuWG5BrHd0i7l3e0qyzujj5ESaC9zikoT-kNpbi_41wuXnFQHC1lbuSEY05QVJNZhhynRzBP4LKbaFdrYWBR4VXoKfQTxfuiwNN3oTR3MNuLn1ZWT6aZeQ",
-                        "alt": "Portrait Detail"
-                    },
-                    {
-                        "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuAlZOnXJBJVL6uQYH0L8yN-j9MbIsLOBc_GThXLvtLTpjcLecebdiv_6imjaRe-MT-2BJJ5004-tKnX69bANiyBHNpsGR9TyDi3A589HHeisSuGIZaT_cx-XcvFqm7s3eVWPVSaG-yhWtbNW8AZxXWYEwtlnjmM746bjXutW_Vu-paZuqEFDIhwpWL2JF3bw97Def57EdDHItN6C8053HWMpBF3ci4UR6tshqQjKShSCsAOGtlML_nZwHH907nTg_uMcWiTe-qefv_v",
-                        "alt": "Wildlife Texture"
-                    }
-                ]
-            },
-            {
-                "type": "grid",
-                "columns": 2,
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuBpM3exqIU_9koTbCYuHYHzhRD4RATxYLC07Fbl-9wCHO1vAbN5eaj6_efpxb3SnrCgNUlWmDS-YV9_P0QwY6X_js40IOHzkKMPthxlWo6bQwJT4m54XjmcOLSWWPRS8xaLhYVlZJCG6Nj_2v0VcR9hXXwZeL8P1IxD7SVLIo4srUYYBTELYOl8Z_SelqY5NVBxQ4xKBWLojIei45u8JKQgXZRieaUsO0BYu8Ax_AGrSiHHCauaQg5ity2MLlLCTmr_offB2sWkvCA4",
-                        "alt": "Elephant Monochrome"
-                    },
-                    {
-                        "type": "quote",
-                        "text": "In the heart of the chaos, there is a silence that speaks louder than words."
-                    }
-                ]
-            }
-        ],
-        "nextProject": {
-            "title": "SAVANNA ECHOES",
-            "id": "savanna-echoes",
-            "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDFv4h0f9lO_nD_zx32wyegHi0ftPwajmzqZXQwWcHbhNC_WCgjyp8s5JNNSogfG32VLfMp70fnSeREftwmSSEiCCqYAzydfBTRptk900wZTvbpeHY4GM1WJJdhPQ5-gv7QIjt98n82-VdyrKL5VxPlts60c4GDArG8zZ9ovEUyl1nxl8CtFdUy73PnHKQEqrmJWuN0vb9loOjeS_tv9JPDx7UsMvyVrWKazxh5WXvTrWZIzUr4fxNyCZ7dAhKF8uAC6wFlm8aT-3gw"
-        },
+        "content": [],
         "wide": true
     },
     {
@@ -69,7 +17,7 @@
         "title": "Garden Wedding",
         "category": "WEDDING",
         "subtitle": "Wedding / Celebration",
-        "cover": "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Karen, Nairobi",
         "services": "Photography",
@@ -82,7 +30,7 @@
         "title": "Street Portrait",
         "category": "PORTRAIT",
         "subtitle": "Portrait / Street",
-        "cover": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Nairobi CBD",
         "services": "Photography",
@@ -108,7 +56,7 @@
         "title": "Haute Couture",
         "category": "FASHION",
         "subtitle": "Fashion / Editorial",
-        "cover": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Studio",
         "services": "Photography",
@@ -121,7 +69,7 @@
         "title": "Brand Launch",
         "category": "COMMERCIAL",
         "subtitle": "Event / Corporate",
-        "cover": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Westlands",
         "services": "Event Photography",
@@ -134,7 +82,7 @@
         "title": "Ceremony",
         "category": "WEDDING",
         "subtitle": "Wedding / Ritual",
-        "cover": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Windsor",
         "services": "Photography",
@@ -147,7 +95,7 @@
         "title": "Nairobi Skyline",
         "category": "LANDSCAPE",
         "subtitle": "Urban / Landscape",
-        "cover": "https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Nairobi",
         "services": "Photography",
@@ -160,7 +108,7 @@
         "title": "Editorial",
         "category": "FASHION",
         "subtitle": "Fashion / Arts",
-        "cover": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1000&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=80&auto=format",
         "date": "2024",
         "location": "Location",
         "services": "Photography",
@@ -173,7 +121,7 @@
         "title": "Corporate Headshot",
         "category": "COMMERCIAL",
         "subtitle": "Portrait / Corporate",
-        "cover": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Office",
         "services": "Portrait Photography",
@@ -186,7 +134,7 @@
         "title": "Natural Light",
         "category": "PORTRAIT",
         "subtitle": "Portrait / Natural",
-        "cover": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Outdoor",
         "services": "Portrait Photography",
@@ -199,24 +147,11 @@
         "title": "First Dance",
         "category": "WEDDING",
         "subtitle": "Wedding / Party",
-        "cover": "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80&auto=format",
+        "cover": "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Naivasha",
         "services": "Photography",
         "description": "The first dance moment.",
-        "content": [],
-        "wide": false
-    },
-    {
-        "id": "product-story",
-        "title": "Product Story",
-        "category": "COMMERCIAL",
-        "subtitle": "Product / Branding",
-        "cover": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80&auto=format",
-        "date": "2024",
-        "location": "Studio",
-        "services": "Product Photography",
-        "description": "Product storytelling campaign.",
         "content": [],
         "wide": false
     }

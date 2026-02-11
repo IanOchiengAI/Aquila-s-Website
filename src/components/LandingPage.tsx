@@ -30,13 +30,16 @@ export default function LandingPage() {
         ? galleries.slice(0, 8)
         : galleries.filter((g) => g.category === activeCategory);
 
-    // Horizontal Scroll Reference
+    // Horizontal Scroll Reference - Increased height for longer pinning
     const horizontalRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: horizontalRef,
         offset: ["start start", "end end"]
     });
 
+    // Calculate X transform based on scroll progress
+    // We want to move the entire width of the track minus the viewport width
+    // Adjusted to -65% or similar to ensure the end card is visible without overshooting
     const x = useTransform(scrollYProgress, [0, 1], ["0%", "-65%"]);
 
     // Hero Parallax
@@ -45,7 +48,7 @@ export default function LandingPage() {
     const heroImageY = useTransform(scrollY, [0, 500], [0, 100]);
 
     return (
-        <div className="bg-[#050505] text-white selection:bg-brand-gold selection:text-black font-sans overflow-x-hidden underline-offset-8">
+        <div className="bg-[#050505] text-white selection:bg-brand-gold selection:text-black font-sans overflow-x-hidden">
             <CustomCursor />
             <ScrollProgress />
 
@@ -61,10 +64,9 @@ export default function LandingPage() {
                         OYANGE
                     </span>
                 </div>
-                <div className="hidden md:flex gap-12 text-[10px] font-bold tracking-[0.3em] uppercase text-white/50">
-                    <Link href="#work" className="hover:text-brand-gold transition-colors duration-300">Portfolio</Link>
+                <div className="hidden md:flex gap-12 text-[10px] font-bold tracking-[0.4em] uppercase text-white/50">
                     <Link href="#featured" className="hover:text-brand-gold transition-colors duration-300">Series</Link>
-                    <Link href="#archive" className="hover:text-brand-gold transition-colors duration-300">Archive</Link>
+                    <Link href="#work" className="hover:text-brand-gold transition-colors duration-300">Portfolio</Link>
                     <Link href="#" className="hover:text-brand-gold transition-colors duration-300">Contact</Link>
                 </div>
                 <button className="md:hidden text-white/50"><Menu size={20} /></button>
@@ -78,7 +80,7 @@ export default function LandingPage() {
                         src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80&auto=format"
                         alt="Hero Background"
                         fill
-                        className="object-cover opacity-70 grayscale-[0.2]"
+                        className="object-cover opacity-80"
                         priority
                     />
                 </motion.div>
@@ -123,20 +125,20 @@ export default function LandingPage() {
                 </motion.div>
             </section>
 
-            {/* Horizontal Scroll Series */}
-            <section ref={horizontalRef} id="featured" className="relative h-[300vh] bg-[#050505]">
+            {/* Horizontal Scroll Series - Pinning Fixed */}
+            <section ref={horizontalRef} id="featured" className="relative h-[400vh] bg-[#050505]">
                 <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-                    <motion.div style={{ x }} className="flex gap-20 px-24 items-center">
+                    <motion.div style={{ x }} className="flex gap-20 px-24 items-center whitespace-nowrap">
                         {/* Intro Lead */}
-                        <div className="flex-shrink-0 w-[500px]">
+                        <div className="flex-shrink-0 w-[500px] whitespace-normal">
                             <span className="text-brand-gold text-[11px] font-bold tracking-[0.4em] uppercase block mb-6">Selected Series</span>
-                            <h2 className="text-5xl md:text-8xl font-display font-black tracking-tighter mb-8 leading-none">MASTER <br /> PIECES.</h2>
+                            <h2 className="text-5xl md:text-8xl font-display font-black tracking-tighter mb-8 leading-none uppercase">MASTER <br /> PIECES.</h2>
                             <p className="text-white/40 text-lg max-w-sm leading-relaxed font-light">
                                 Flagship projects where light, shadow, and emotion converge to tell a singular story.
                             </p>
                         </div>
 
-                        {/* High Quality Unsplash Series */}
+                        {/* High Quality Series Cards */}
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&q=80&auto=format"
                             title="Sunset Vows"
@@ -155,12 +157,20 @@ export default function LandingPage() {
                             category="Fashion"
                             location="Studio Collection 2026"
                         />
+                        <HorizontalCard
+                            src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=1400&q=80&auto=format"
+                            title="The Artisan"
+                            category="Portrait"
+                            location="Urban Collection"
+                        />
 
                         {/* End Point */}
                         <div className="flex-shrink-0 w-[400px] flex flex-col items-center justify-center text-center">
                             <Link href="#work" className="group flex flex-col items-center">
                                 <div className="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center hover:border-brand-gold transition-all duration-500 group-hover:scale-110">
-                                    <ArrowRight size={32} className="text-white group-hover:text-brand-gold transition-colors" />
+                                    <button className="p-2 hover:text-brand-gold transition-colors" aria-label="View Full Portfolio">
+                                        <ArrowRight size={32} className="text-white group-hover:text-brand-gold transition-colors" />
+                                    </button>
                                 </div>
                                 <span className="mt-8 text-[10px] font-bold tracking-[0.4em] uppercase text-white/30 group-hover:text-white">Full Portfolio</span>
                             </Link>
@@ -169,13 +179,23 @@ export default function LandingPage() {
                 </div>
             </section>
 
+            {/* Narrative Section */}
+            <section className="py-60 bg-black border-y border-white/5">
+                <div className="max-w-5xl mx-auto px-8 text-center">
+                    <span className="text-brand-gold text-[11px] font-bold tracking-[0.8em] uppercase mb-16 block">The Vision</span>
+                    <h2 className="text-4xl md:text-7xl font-serif italic text-white/90 leading-tight">
+                        &quot;Photography is not just capturing what you see, but revealing what everyone else misses.&quot;
+                    </h2>
+                </div>
+            </section>
+
             {/* Selected Works Grid */}
-            <section id="work" className="py-40 px-6 md:px-12 bg-black">
+            <section id="work" className="py-40 px-6 md:px-12 bg-[#050505]">
                 <div className="max-w-[1600px] mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
                         <div>
                             <span className="text-brand-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4 block">Archive</span>
-                            <h2 className="text-5xl md:text-8xl font-display font-black tracking-tighter">SELECTED <span className="text-brand-gold italic font-serif">WORKS</span></h2>
+                            <h2 className="text-5xl md:text-[7rem] font-display font-black tracking-tighter uppercase leading-none">THE <span className="text-brand-gold italic font-serif">GALLERY</span></h2>
                         </div>
 
                         <div className="flex flex-wrap gap-3">
@@ -184,9 +204,10 @@ export default function LandingPage() {
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     className={`px-8 py-3 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-500 border ${activeCategory === cat
-                                            ? "bg-brand-gold border-brand-gold text-black shadow-[0_0_30px_rgba(212,175,55,0.2)]"
-                                            : "bg-transparent border-white/10 text-white/40 hover:border-white/30"
+                                        ? "bg-brand-gold border-brand-gold text-black shadow-[0_0_30px_rgba(212,175,55,0.3)]"
+                                        : "bg-transparent border-white/10 text-white/40 hover:border-white/30"
                                         }`}
+                                    aria-label={`Filter by ${cat} category`}
                                 >
                                     {cat}
                                 </button>
@@ -204,10 +225,10 @@ export default function LandingPage() {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.6, delay: idx * 0.05 }}
-                                    className={`${item.wide ? 'lg:col-span-2' : ''} group relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-white/5 cursor-pointer`}
+                                    className={`${item.wide ? 'lg:col-span-2' : ''} group relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-white/5 cursor-pointer shadow-xl`}
                                 >
-                                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent p-10 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-10 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0">
                                         <span className="text-brand-gold text-[9px] font-bold tracking-[0.3em] uppercase mb-3">{item.category}</span>
                                         <h4 className="text-2xl font-serif font-bold text-white mb-1">{item.title}</h4>
                                         <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">{item.subtitle}</p>
@@ -219,18 +240,18 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Services Section */}
-            <section className="py-40 bg-[#050505] border-t border-white/5">
-                <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 lg:grid-cols-4 gap-12">
-                    <ServiceBlock title="Weddings" desc="Documenting love stories with cinematic precision." icon={<Camera size={24} />} />
-                    <ServiceBlock title="Portraits" desc="Personal sessions that capture unique identity." icon={<Globe size={24} />} />
-                    <ServiceBlock title="Editorial" desc="High-end fashion and brand imagery." icon={<ShoppingBag size={24} />} />
-                    <ServiceBlock title="Landscape" desc="The raw beauty of the African horizon." icon={<Instagram size={24} />} />
+            {/* Services Breakdown */}
+            <section className="py-40 bg-black">
+                <div className="max-w-[1400px] mx-auto px-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
+                    <ServiceCard title="Weddings" desc="Documenting love stories with cinematic precision." icon={<Camera size={24} />} />
+                    <ServiceCard title="Portraits" desc="Personal sessions that capture unique identity." icon={<Globe size={24} />} />
+                    <ServiceCard title="Editorial" desc="High-end fashion and brand imagery." icon={<ShoppingBag size={24} />} />
+                    <ServiceCard title="Visuals" desc="The raw beauty of the African horizon." icon={<Instagram size={24} />} />
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="py-24 border-t border-white/5 text-center px-8 bg-black">
+            <footer className="py-24 border-t border-white/5 text-center px-8 bg-[#050505]">
                 <div className="flex justify-center gap-16 mb-16 text-white/30 text-[10px] font-bold tracking-[0.6em] uppercase">
                     <Link href="#" className="hover:text-brand-gold transition-colors">Instagram</Link>
                     <Link href="#" className="hover:text-brand-gold transition-colors">Behance</Link>
@@ -241,13 +262,13 @@ export default function LandingPage() {
                 </p>
             </footer>
 
-            {/* Floating CTA */}
+            {/* Booking CTA */}
             <motion.div
                 initial={{ y: 100 }}
                 animate={{ y: 0 }}
                 className="fixed bottom-10 right-10 z-[110]"
             >
-                <button className="bg-brand-gold text-black px-8 py-4 rounded-full font-black uppercase tracking-widest text-[11px] shadow-2xl flex items-center gap-4 hover:scale-105 transition-all">
+                <button className="bg-brand-gold text-black px-10 py-5 rounded-full font-black uppercase tracking-[0.2em] text-[11px] shadow-[0_20px_40px_rgba(212,175,55,0.3)] flex items-center gap-4 hover:scale-105 transition-all active:scale-95" aria-label="Book a Session">
                     <Calendar size={18} /> Book Session
                 </button>
             </motion.div>
@@ -257,7 +278,7 @@ export default function LandingPage() {
 
 function HorizontalCard({ src, title, category, location }: { src: string, title: string, category: string, location: string }) {
     return (
-        <div className="flex-shrink-0 w-[75vw] md:w-[60vw] max-w-[1100px]">
+        <div className="flex-shrink-0 w-[75vw] md:w-[60vw] max-w-[1100px] whitespace-normal">
             <div className="group relative aspect-[16/9] overflow-hidden rounded-[3rem] bg-white/5 cursor-pointer shadow-3xl">
                 <Image
                     src={src}
@@ -267,7 +288,7 @@ function HorizontalCard({ src, title, category, location }: { src: string, title
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent p-12 flex flex-col justify-end">
                     <span className="text-brand-gold text-[10px] tracking-[0.4em] uppercase font-black mb-4">{category}</span>
-                    <h3 className="font-serif text-4xl md:text-6xl font-bold mb-3">{title}</h3>
+                    <h3 className="font-serif text-4xl md:text-7xl font-bold mb-3">{title}</h3>
                     <p className="text-white/50 text-sm md:text-lg font-light tracking-wide">{location}</p>
                 </div>
             </div>
@@ -275,13 +296,13 @@ function HorizontalCard({ src, title, category, location }: { src: string, title
     );
 }
 
-function ServiceBlock({ title, desc, icon }: { title: string, desc: string, icon: any }) {
+function ServiceCard({ title, desc, icon }: { title: string, desc: string, icon: any }) {
     return (
-        <div className="group">
+        <div className="group p-8 border border-white/5 rounded-3xl hover:bg-white/[0.02] transition-colors">
             <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-10 group-hover:bg-brand-gold/10 transition-colors duration-500">
                 <div className="text-brand-gold">{icon}</div>
             </div>
-            <h3 className="text-2xl font-display font-black tracking-tight mb-4">{title}</h3>
+            <h3 className="text-2xl font-display font-black tracking-tight mb-4 uppercase">{title}</h3>
             <p className="text-white/40 text-sm leading-relaxed font-light">{desc}</p>
         </div>
     );
