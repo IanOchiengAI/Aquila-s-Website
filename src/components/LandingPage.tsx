@@ -38,8 +38,8 @@ export default function LandingPage() {
         offset: ["start start", "end end"]
     });
 
-    // Calculate X transform - Zero-gap start with a generous "sticky" hold at the beginning and end (0.2 to 0.8)
-    const baseTranslateX = useTransform(scrollYProgress, [0.2, 0.8], ["0%", "-65%"]);
+    // Calculate X transform - Zero-gap start with a generous "sticky" hold at the beginning and end (0.15 to 0.65)
+    const baseTranslateX = useTransform(scrollYProgress, [0.15, 0.65], ["0%", "-65%"]);
     const x = useSpring(baseTranslateX, { stiffness: 400, damping: 90 });
 
     // Hero Parallax
@@ -141,7 +141,7 @@ export default function LandingPage() {
             </section>
 
             {/* Horizontal Scroll Series - Increased sequence height for longer pinning */}
-            <section ref={horizontalRef} id="featured" className="relative h-[600vh] bg-background">
+            <section ref={horizontalRef} id="featured" className="relative h-[800vh] bg-background">
                 <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-b from-background via-white/[0.2] to-background">
                     <motion.div style={{ x }} className="flex gap-20 px-24 items-center">
                         {/* Intro Lead */}
