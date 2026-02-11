@@ -1,46 +1,44 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, AnimatePresence, useSpring, useMotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, useSpring, useInView, useMotionValue } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Globe, Camera, ShoppingBag, Instagram, ChevronDown, Calendar } from "lucide-react";
+import { ArrowRight, Globe, Camera, ShoppingBag, Instagram, ChevronDown, Calendar, Menu, X } from "lucide-react";
 import galleries from "@/data/galleries.json";
 
 // Animation Variants
 const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
+    initial: { opacity: 0, y: 80 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-};
-
-const stagger = {
-    animate: {
-        transition: {
-            staggerChildren: 0.1,
-        },
-    },
+    transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] },
 };
 
 export default function LandingPage() {
     const [activeCategory, setActiveCategory] = useState("ALL");
-    const categories = ["ALL", ...Array.from(new Set(galleries.map((g) => g.category)))];
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    const categories = ["ALL", ...Array.from(new Set(galleries.map((g) => g.category)))];
     const filteredGalleries = activeCategory === "ALL"
-        ? galleries.slice(0, 8)
+        ? galleries.slice(0, 12)
         : galleries.filter((g) => g.category === activeCategory);
 
     // Horizontal Scroll Reference
     const horizontalRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
+    const { scrollYProgress: horizontalScroll } = useScroll({
         target: horizontalRef,
         offset: ["start start", "end end"]
     });
 
-    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
+    const x = useTransform(horizontalScroll, [0, 1], ["0%", "-75%"]);
+
+    // Hero Parallax
+    const { scrollY } = useScroll();
+    const heroTextY = useTransform(scrollY, [0, 500], [0, 200]);
+    const heroImageY = useTransform(scrollY, [0, 500], [0, 100]);
 
     return (
-        <div className="bg-[#0a0a0a] text-white selection:bg-brand-gold selection:text-black font-sans scroll-smooth">
+        <div className="bg-[#050505] text-white selection:bg-brand-gold selection:text-black font-sans overflow-x-hidden">
             <CustomCursor />
             <ScrollProgress />
 
@@ -48,136 +46,170 @@ export default function LandingPage() {
             <motion.nav
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
-                transition={{ duration: 1, ease: "circOut" }}
-                className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-8 transition-all duration-500 hover:bg-black/40 backdrop-blur-md border-b border-white/5"
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-8 md:px-16 py-10 mix-blend-difference"
             >
-                <div className="flex items-center gap-2">
-                    <span className="text-2xl font-display font-black tracking-[0.2em] uppercase">
-                        AQUILA
+                <Link href="/" className="group flex items-center gap-2">
+                    <span className="text-2xl md:text-3xl font-display font-black tracking-[0.25em] uppercase transition-all duration-500 group-hover:tracking-[0.4em]">
+                        OYANGE
                     </span>
+                </Link>
+
+                <div className="hidden md:flex gap-16 text-[10px] font-bold tracking-[0.4em] uppercase opacity-70">
+                    <Link href="#archive" className="hover:text-brand-gold transition-colors">Archive</Link>
+                    <Link href="#journey" className="hover:text-brand-gold transition-colors">The Journey</Link>
+                    <Link href="#vision" className="hover:text-brand-gold transition-colors">Vision</Link>
+                    <Link href="#" className="hover:text-brand-gold transition-colors">Connect</Link>
                 </div>
-                <div className="hidden md:flex gap-12 text-[10px] font-bold tracking-[0.3em] uppercase text-white/50">
-                    <Link href="#work" className="hover:text-brand-gold transition-colors duration-301">Work</Link>
-                    <Link href="#featured" className="hover:text-brand-gold transition-colors duration-301">Series</Link>
-                    <Link href="#ecosystem" className="hover:text-brand-gold transition-colors duration-301">Ecosystem</Link>
-                    <Link href="#" className="hover:text-brand-gold transition-colors duration-301">Contact</Link>
-                </div>
-                <button className="md:hidden text-white/50">Menu</button>
+
+                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 hover:text-brand-gold transition-colors">
+                    {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
             </motion.nav>
 
-            {/* Hero Section */}
-            <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-                {/* Hero Image / Video Placeholder */}
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-black/60 z-10" />
+            {/* Hero Section: The Portal */}
+            <section className="relative h-screen flex items-center justify-center overflow-hidden">
+                <motion.div style={{ y: heroImageY }} className="absolute inset-0 z-0">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black z-10" />
                     <Image
-                        src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80&auto=format"
+                        src="/images/New Images/website images/Screenshot 2026-02-10 170021.png"
                         alt="Hero Background"
                         fill
-                        className="object-cover opacity-60 mix-blend-luminosity"
+                        className="object-cover scale-105"
                         priority
                     />
-                </div>
+                </motion.div>
 
                 <motion.div
-                    variants={stagger}
-                    initial="initial"
-                    animate="animate"
-                    className="relative z-10 text-center px-6"
+                    style={{ y: heroTextY }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative z-20 text-center px-6"
                 >
-                    <motion.p
-                        variants={fadeInUp}
-                        className="text-[10px] tracking-[0.8em] uppercase text-brand-gold mb-8 font-bold"
-                    >
-                        NAIROBI, KENYA
-                    </motion.p>
-                    <motion.h1
-                        variants={fadeInUp}
-                        className="font-serif text-5xl md:text-8xl lg:text-[7rem] font-bold leading-[1.1] mb-12 tracking-tight"
-                    >
-                        Capturing <br />
-                        <span className="text-brand-gold italic">Pure Essence</span>
-                    </motion.h1>
-                    <motion.p
-                        variants={fadeInUp}
-                        className="max-w-2xl mx-auto text-white/60 text-sm md:text-lg font-light leading-relaxed mb-12"
-                    >
-                        Timeless photography that defines excellence. Elevating your vision <br className="hidden md:block" /> through an artistic lens.
-                    </motion.p>
-
-                    <motion.div variants={fadeInUp}>
-                        <div className="flex flex-col items-center gap-6">
-                            <span className="text-[9px] tracking-[0.5em] uppercase text-white/30 font-bold">Scroll to Explore</span>
-                            <motion.div
-                                animate={{ y: [0, 10, 0] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="w-px h-16 bg-gradient-to-b from-brand-gold to-transparent"
-                            />
-                        </div>
-                    </motion.div>
+                    <p className="text-[10px] md:text-xs tracking-[1em] uppercase text-brand-gold mb-12 font-black leading-none opacity-0 animate-fade-in-up" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
+                        A Visual Odyssey
+                    </p>
+                    <h1 className="font-display text-7xl md:text-[14rem] font-black leading-[0.85] tracking-tighter mb-12 outline-text hover:text-white transition-all duration-1000 cursor-default">
+                        STORY <br /> <span className="italic font-serif font-light tracking-normal text-white">TELLER</span>
+                    </h1>
+                    <div className="flex flex-col items-center gap-8 mt-16">
+                        <motion.div
+                            animate={{ y: [0, 15, 0] }}
+                            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                            className="w-px h-24 bg-gradient-to-b from-brand-gold to-transparent opacity-50"
+                        />
+                    </div>
                 </motion.div>
             </section>
 
-            {/* Horizontal Scroll Section */}
-            <section ref={horizontalRef} id="featured" className="relative h-[300vh] bg-black">
+            {/* Narrative Quote Section */}
+            <section id="vision" className="py-60 px-8 bg-black relative">
+                <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-brand-gold text-[11px] font-bold tracking-[0.5em] uppercase mb-16"
+                    >
+                        The Philosophy
+                    </motion.span>
+                    <h2 className="text-4xl md:text-7xl font-serif italic text-white/90 leading-tight max-w-5xl">
+                        &quot;Photography is not just capturing what you see, <br className="hidden md:block" />
+                        but <span className="text-brand-gold">revealing</span> what everyone else misses.&quot;
+                    </h2>
+                    <div className="mt-20 w-32 h-px bg-white/10" />
+                </div>
+            </section>
+
+            {/* The Journey: Horizontal Cinematic Flow */}
+            <section ref={horizontalRef} id="journey" className="relative h-[400vh] bg-[#050505]">
                 <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-                    <motion.div style={{ x }} className="flex gap-20 px-24 items-center">
-                        {/* Lead Card */}
-                        <div className="flex-shrink-0 w-[500px]">
-                            <span className="text-brand-gold text-[11px] font-bold tracking-[0.4em] uppercase block mb-6 px-1">Selected Series</span>
-                            <h2 className="text-5xl md:text-8xl font-bold tracking-tight mb-8">Master <br /> Pieces.</h2>
-                            <p className="text-white/40 text-lg max-w-sm leading-relaxed font-light">
-                                Flagship projects where light, shadow, and emotion converge to tell a singular story.
+                    <motion.div style={{ x }} className="flex gap-40 px-[20vw] items-center">
+
+                        {/* Journal Stage 1 */}
+                        <div className="flex-shrink-0 w-[600px] flex flex-col gap-10">
+                            <span className="text-brand-gold text-[10px] font-bold tracking-[0.4em] uppercase">Phase 01</span>
+                            <h3 className="text-6xl md:text-9xl font-display font-black tracking-tight">THE <br /> SILENCE.</h3>
+                            <p className="text-white/40 text-xl font-light leading-relaxed max-w-sm">
+                                In the heart of Nairobi, we find the quiet moments that define the pulse of the city.
                             </p>
                         </div>
 
-                        {/* Horizontal Cards */}
-                        {galleries.filter(g => g.wide).map((item, idx) => (
-                            <div key={item.id} className="flex-shrink-0 w-[70vw] md:w-[60vw] max-w-[1000px]">
-                                <div className="group relative aspect-[16/10] overflow-hidden rounded-[40px] bg-white/5 cursor-pointer shadow-2xl transition-transform duration-700 hover:scale-[1.02]">
-                                    <Image
-                                        src={item.cover}
-                                        alt={item.title}
-                                        fill
-                                        className="object-cover transition-transform duration-[2s] group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-12 flex flex-col justify-end">
-                                        <span className="text-brand-gold text-[10px] tracking-[0.3em] uppercase font-bold mb-4">{item.category}</span>
-                                        <h3 className="font-serif text-3xl md:text-5xl font-bold mb-2">{item.title}</h3>
-                                        <p className="text-white/50 text-sm md:text-base font-light tracking-wide">{item.subtitle}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        {/* Cinematic Image 1 */}
+                        <JourneyItem
+                            src="/images/New Images/website images/Screenshot 2026-02-10 165841.png"
+                            title="Celebration of Life"
+                            category="Life"
+                            size="large"
+                        />
 
-                        {/* End Card */}
-                        <div className="flex-shrink-0 w-[400px] flex flex-col items-center justify-center text-center">
-                            <div className="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center group cursor-pointer hover:border-brand-gold transition-all duration-500">
-                                <ArrowRight size={32} className="text-white group-hover:text-brand-gold transition-colors" />
-                            </div>
-                            <span className="mt-8 text-[10px] font-bold tracking-[0.4em] uppercase text-white/30">View All Work</span>
+                        {/* Journal Stage 2 */}
+                        <div className="flex-shrink-0 w-[600px] flex flex-col gap-10">
+                            <span className="text-brand-gold text-[10px] font-bold tracking-[0.4em] uppercase">Phase 02</span>
+                            <h3 className="text-6xl md:text-9xl font-display font-black tracking-tight underline decoration-brand-gold underline-offset-[20px]">PURE <br /> VISION.</h3>
+                            <p className="text-white/40 text-xl font-light leading-relaxed max-w-sm">
+                                Stripping away the noise to focus on the raw, unfiltered truth of the subject.
+                            </p>
+                        </div>
+
+                        {/* Cinematic Image 2 */}
+                        <JourneyItem
+                            src="/images/New Images/website images/Screenshot 2026-02-10 170651.png"
+                            title="Primal Earth"
+                            category="Nature"
+                            size="vertical"
+                        />
+
+                        {/* Journal Stage 3 */}
+                        <div className="flex-shrink-0 w-[600px] flex flex-col gap-10">
+                            <span className="text-brand-gold text-[10px] font-bold tracking-[0.4em] uppercase">Phase 03</span>
+                            <h3 className="text-6xl md:text-9xl font-display font-black tracking-tight">THE <br /> LEGACY.</h3>
+                            <p className="text-white/40 text-xl font-light leading-relaxed max-w-sm">
+                                Every frame is a building block of a story that will outlive us all.
+                            </p>
+                        </div>
+
+                        {/* Cinematic Image 3 */}
+                        <JourneyItem
+                            src="/images/New Images/website images/Screenshot 2026-02-10 170546.png"
+                            title="Above the Canopy"
+                            category="Outdoor"
+                            size="large"
+                        />
+
+                        {/* Journey End */}
+                        <div className="flex-shrink-0 w-[500px] text-center">
+                            <Link href="#archive" className="group flex flex-col items-center gap-12">
+                                <div className="w-40 h-40 rounded-full border border-white/10 flex items-center justify-center transition-all duration-700 group-hover:border-brand-gold group-hover:scale-110">
+                                    <ArrowRight size={48} className="text-white transition-transform group-hover:translate-x-4" />
+                                </div>
+                                <span className="text-[12px] font-bold tracking-[0.6em] uppercase text-white/30 group-hover:text-brand-gold">Enter the Archive</span>
+                            </Link>
                         </div>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Selected Works Grid */}
-            <section id="work" className="py-40 px-6 md:px-12 bg-[#050505]">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            {/* Archive Grid: The Repository of Moments */}
+            <section id="archive" className="py-40 px-6 md:px-12 bg-[#0a0a0a] border-t border-white/5">
+                <div className="max-w-[1600px] mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-baseline mb-32 gap-12">
                         <div>
-                            <span className="text-brand-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4 block">Portfolio</span>
-                            <h2 className="text-4xl md:text-7xl font-display font-bold tracking-tighter">Selected <span className="text-brand-gold italic font-serif italic">Works</span></h2>
+                            <h2 className="text-6xl md:text-[8rem] font-display font-black tracking-tighter mb-6">ARCHIVE</h2>
+                            <p className="text-white/30 text-lg md:text-xl font-light tracking-wide max-w-md">
+                                A curated repository of clinical precision and artistic chaos.
+                            </p>
                         </div>
 
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-4">
                             {categories.map((cat) => (
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`px-6 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-500 border ${activeCategory === cat
-                                        ? "bg-brand-gold border-brand-gold text-black shadow-[0_0_20px_rgba(212,175,55,0.3)]"
-                                        : "bg-transparent border-white/10 text-white/40 hover:border-white/30"
+                                    className={`px-8 py-3 rounded-full text-[10px] font-bold tracking-[0.3em] uppercase transition-all duration-700 border ${activeCategory === cat
+                                        ? "bg-brand-gold border-brand-gold text-black shadow-[0_0_40px_rgba(212,175,55,0.2)]"
+                                        : "bg-transparent border-white/5 text-white/20 hover:border-white/30 hover:text-white"
                                         }`}
                                 >
                                     {cat}
@@ -186,22 +218,22 @@ export default function LandingPage() {
                         </div>
                     </div>
 
-                    <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <AnimatePresence mode="popLayout">
-                            {filteredGalleries.map((item) => (
+                            {filteredGalleries.map((item, idx) => (
                                 <motion.div
                                     layout
                                     key={item.id}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, y: 40 }}
+                                    animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.5 }}
-                                    className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-white/5"
+                                    transition={{ duration: 0.8, delay: idx * 0.05 }}
+                                    className={`${item.wide ? 'lg:col-span-2' : ''} group relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-white/5`}
                                 >
-                                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity p-10 flex flex-col justify-end backdrop-blur-[2px]">
-                                        <h4 className="text-2xl font-serif font-bold text-white mb-2">{item.title}</h4>
-                                        <p className="text-white/60 text-xs font-light tracking-wide">{item.subtitle}</p>
+                                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-[1.5s] group-hover:scale-110 grayscale group-hover:grayscale-0" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-10 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0">
+                                        <span className="text-brand-gold text-[9px] font-bold tracking-[0.3em] uppercase mb-4">{item.category}</span>
+                                        <h4 className="text-3xl font-serif font-black text-white">{item.title}</h4>
                                     </div>
                                 </motion.div>
                             ))}
@@ -210,37 +242,71 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Ecosystem Section */}
-            <section id="ecosystem" className="py-40 bg-black">
-                <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-3 gap-8">
-                    <EcosystemCard title="Pulse Studio" subtitle="High-End Photography & Film" icon={<Camera size={40} />} />
-                    <EcosystemCard title="Pulse Creative" subtitle="Brand Identity & Digital" icon={<Globe size={40} />} />
-                    <EcosystemCard title="Pulse Merch" subtitle="Limited Edition Goods" icon={<ShoppingBag size={40} />} />
+            {/* Service Mastery Section: The Workings */}
+            <section className="py-60 bg-black">
+                <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-3 gap-20">
+                    <ServiceTile title="Editorial" desc="Storytelling through fashion and identity." icon={<Camera size={32} />} />
+                    <ServiceTile title="Documentary" desc="Unfiltered reporting of the human condition." icon={<Globe size={32} />} />
+                    <ServiceTile title="Legacy" desc="Preserving moments for the next generation." icon={<ShoppingBag size={32} />} />
+                </div>
+            </section>
+
+            {/* Connect Banner */}
+            <section className="py-60 px-8 bg-[#050505] border-t border-white/5">
+                <div className="max-w-5xl mx-auto text-center">
+                    <h2 className="text-6xl md:text-[9rem] font-display font-black mb-16 tracking-tighter leading-none">
+                        CRAFT <br /> <span className="text-brand-gold italic font-serif font-light">TOGETHER.</span>
+                    </h2>
+                    <Link href="mailto:hello@oyange.com" className="inline-flex items-center gap-6 text-sm md:text-2xl font-bold tracking-[0.5em] uppercase hover:text-brand-gold transition-all duration-700 group">
+                        hello@oyange.com <ArrowRight className="group-hover:translate-x-10 transition-transform" />
+                    </Link>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="py-20 border-t border-white/5 text-center px-6">
-                <div className="flex justify-center gap-12 mb-10 text-white/30 text-[10px] font-bold tracking-[0.4em] uppercase">
-                    <Link href="#" className="hover:text-brand-gold cursor-hover">Instagram</Link>
-                    <Link href="#" className="hover:text-brand-gold cursor-hover">Behance</Link>
-                    <Link href="#" className="hover:text-brand-gold cursor-hover">WhatsApp</Link>
+            <footer className="py-24 border-t border-white/5 text-center px-8 bg-black">
+                <div className="flex justify-center gap-16 mb-16 text-white/30 text-[10px] font-bold tracking-[0.5em] uppercase">
+                    <Link href="#" className="hover:text-brand-gold transition-colors">Instagram</Link>
+                    <Link href="#" className="hover:text-brand-gold transition-colors">Behance</Link>
+                    <Link href="#" className="hover:text-brand-gold transition-colors">LinkedIn</Link>
                 </div>
-                <p className="text-white/10 text-[9px] font-bold tracking-[0.5em] uppercase">
-                    © 2026 AQUILA OYANGE. HANDCRAFTED IN NAIROBI.
+                <p className="text-white/5 text-[10px] font-bold tracking-[0.6em] uppercase">
+                    © 2026 OYANGE PHOTOGRAPHY. BORN IN NAIROBI.
                 </p>
             </footer>
 
-            {/* Floating CTA */}
-            <motion.div
-                initial={{ y: 100 }}
-                animate={{ y: 0 }}
-                className="fixed bottom-10 right-10 z-[100]"
-            >
-                <button className="bg-brand-gold text-black px-8 py-4 rounded-full font-bold uppercase tracking-widest text-[11px] shadow-2xl flex items-center gap-3 hover:scale-105 transition-transform">
-                    <Calendar size={18} /> Book Session
-                </button>
-            </motion.div>
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {isMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        className="fixed inset-0 z-[200] bg-black p-12 flex flex-col justify-center"
+                    >
+                        <button onClick={() => setIsMenuOpen(false)} className="absolute top-12 right-12 text-white/50 hover:text-white">
+                            <X size={40} />
+                        </button>
+                        <div className="flex flex-col gap-12 text-5xl font-display font-black tracking-tighter">
+                            <Link href="#archive" onClick={() => setIsMenuOpen(false)}>Archive</Link>
+                            <Link href="#journey" onClick={() => setIsMenuOpen(false)}>The Journey</Link>
+                            <Link href="#vision" onClick={() => setIsMenuOpen(false)}>Vision</Link>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
+
+function JourneyItem({ src, title, category, size }: { src: string, title: string, category: string, size: 'large' | 'vertical' }) {
+    return (
+        <div className={`flex-shrink-0 relative overflow-hidden rounded-[3rem] bg-white/5 ${size === 'large' ? 'w-[70vw] aspect-[16/9]' : 'w-[40vw] aspect-[3/4]'}`}>
+            <Image src={src} alt={title} fill className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-16 opacity-0 hover:opacity-100 transition-opacity duration-700">
+                <span className="text-brand-gold text-xs font-bold tracking-[0.4em] uppercase mb-4">{category}</span>
+                <h4 className="text-4xl md:text-6xl font-serif font-black">{title}</h4>
+            </div>
         </div>
     );
 }
@@ -250,18 +316,17 @@ function ScrollProgress() {
     const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
     return (
         <motion.div
-            className="fixed top-0 left-0 right-0 h-[2px] bg-brand-gold z-[1000] origin-left"
+            className="fixed top-0 left-0 right-0 h-[3px] bg-brand-gold z-[1000] origin-left shadow-[0_0_20px_rgba(212,175,55,0.5)]"
             style={{ scaleX }}
         />
     );
 }
 
 function CustomCursor() {
-    const [isHovering, setIsHovering] = useState(false);
     const mouseX = useMotionValue(-100);
     const mouseY = useMotionValue(-100);
-    const springX = useSpring(mouseX, { damping: 20, stiffness: 150 });
-    const springY = useSpring(mouseY, { damping: 20, stiffness: 150 });
+    const springX = useSpring(mouseX, { damping: 25, stiffness: 200 });
+    const springY = useSpring(mouseY, { damping: 25, stiffness: 200 });
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -277,26 +342,22 @@ function CustomCursor() {
             className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[99999] mix-blend-difference hidden md:block"
             style={{ x: springX, y: springY, translateX: "-50%", translateY: "-50%" }}
         >
-            <div className="w-full h-full rounded-full border border-white" />
-            <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
+            <div className="w-full h-full rounded-full border border-white opacity-50" />
+            <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
         </motion.div>
     );
 }
 
-function EcosystemCard({ title, subtitle, icon }: { title: string, subtitle: string, icon: any }) {
+function ServiceTile({ title, desc, icon }: { title: string, desc: string, icon: any }) {
     return (
-        <motion.div
-            whileHover={{ y: -10 }}
-            className="group p-12 border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent rounded-[2.5rem] cursor-pointer"
-        >
-            <div className="mb-8 text-white/30 group-hover:text-brand-gold transition-colors duration-500">
+        <div className="group cursor-default">
+            <div className="mb-10 text-white/20 transition-all duration-700 group-hover:text-brand-gold group-hover:scale-110">
                 {icon}
             </div>
-            <h3 className="text-3xl font-display font-bold mb-4 tracking-tighter">{title}</h3>
-            <p className="text-white/40 text-sm font-light leading-relaxed tracking-wide mb-8">{subtitle}</p>
-            <div className="flex items-center gap-4 text-[10px] font-bold tracking-[0.3em] uppercase text-white/20 group-hover:text-white transition-colors">
-                Enter <ArrowRight size={14} className="-rotate-45 group-hover:rotate-0 transition-transform duration-500" />
-            </div>
-        </motion.div>
+            <h3 className="text-4xl font-display font-black tracking-tighter mb-4">{title}</h3>
+            <p className="text-white/40 text-lg font-light leading-relaxed group-hover:text-white/60 transition-colors">
+                {desc}
+            </p>
+        </div>
     );
 }

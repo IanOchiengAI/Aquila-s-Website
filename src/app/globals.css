@@ -18,6 +18,15 @@
   text-wrap: balance;
 }
 
+.outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+}
+
+.outline-text:hover {
+  -webkit-text-stroke: 1px var(--color-brand-gold);
+}
+
 body {
   background: var(--color-background);
   color: var(--color-foreground);
