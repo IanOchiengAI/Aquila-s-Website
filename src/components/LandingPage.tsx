@@ -7,11 +7,11 @@ import Image from "next/image";
 import { ArrowRight, Globe, Camera, ShoppingBag, Instagram, ChevronDown, Calendar, Menu, X } from "lucide-react";
 import galleries from "@/data/galleries.json";
 
-// Animation Variants
+// Animation Variants - Refined for "Mac" feel
 const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
+    initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] },
 };
 
 const stagger = {
@@ -30,57 +30,55 @@ export default function LandingPage() {
         ? galleries.slice(0, 8)
         : galleries.filter((g) => g.category === activeCategory);
 
-    // Horizontal Scroll Reference - Increased height for longer pinning
+    // Horizontal Scroll Reference
     const horizontalRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: horizontalRef,
         offset: ["start start", "end end"]
     });
 
-    // Calculate X transform based on scroll progress
-    // We want to move the entire width of the track minus the viewport width
-    // Adjusted to -65% or similar to ensure the end card is visible without overshooting
-    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-65%"]);
+    // Calculate X transform - Adjusted for better stability
+    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
 
     // Hero Parallax
     const { scrollY } = useScroll();
-    const heroTextY = useTransform(scrollY, [0, 500], [0, 200]);
-    const heroImageY = useTransform(scrollY, [0, 500], [0, 100]);
+    const heroTextY = useTransform(scrollY, [0, 500], [0, 100]);
+    const heroImageY = useTransform(scrollY, [0, 500], [0, 50]);
 
     return (
-        <div className="bg-[#050505] text-white selection:bg-brand-gold selection:text-black font-sans overflow-x-hidden">
+        <div className="bg-background text-foreground selection:bg-brand-gold selection:text-black font-sans overflow-x-hidden">
             <CustomCursor />
             <ScrollProgress />
 
-            {/* Navigation */}
+            {/* Navigation - Glassmorphism */}
             <motion.nav
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
-                transition={{ duration: 1, ease: "circOut" }}
-                className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 md:px-12 py-8 transition-all duration-500 hover:bg-black/40 backdrop-blur-md border-b border-white/5"
+                transition={{ duration: 0.8, ease: "circOut" }}
+                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-5xl glass-card rounded-2xl flex items-center justify-between px-8 py-4 px-12"
             >
                 <div className="flex items-center gap-2">
-                    <span className="text-2xl font-display font-black tracking-[0.2em] uppercase">
+                    <span className="text-xl font-display font-black tracking-widest uppercase">
                         OYANGE
                     </span>
                 </div>
-                <div className="hidden md:flex gap-12 text-[10px] font-bold tracking-[0.4em] uppercase text-white/50">
-                    <Link href="#featured" className="hover:text-brand-gold transition-colors duration-300">Series</Link>
-                    <Link href="#work" className="hover:text-brand-gold transition-colors duration-300">Portfolio</Link>
-                    <Link href="#" className="hover:text-brand-gold transition-colors duration-300">Contact</Link>
+                <div className="hidden md:flex gap-10 text-[10px] font-bold tracking-[0.2em] uppercase text-foreground/50">
+                    <Link href="#featured" className="hover:text-foreground transition-colors duration-300">Series</Link>
+                    <Link href="#work" className="hover:text-foreground transition-colors duration-300">Portfolio</Link>
+                    <Link href="#" className="hover:text-foreground transition-colors duration-300">Contact</Link>
                 </div>
-                <button className="md:hidden text-white/50"><Menu size={20} /></button>
+                <button className="md:hidden text-foreground/50"><Menu size={18} /></button>
             </motion.nav>
 
-            {/* Hero Section */}
-            <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+            {/* Hero Section - Mac Style Softness */}
+            <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <motion.div style={{ y: heroImageY }} className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-black/50 z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-background z-10" />
                     <Image
                         src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80&auto=format"
                         alt="Hero Background"
                         fill
-                        className="object-cover opacity-80"
+                        className="object-cover opacity-90 scale-105"
                         priority
                     />
                 </motion.div>
@@ -94,85 +92,77 @@ export default function LandingPage() {
                 >
                     <motion.p
                         variants={fadeInUp}
-                        className="text-[10px] tracking-[0.8em] uppercase text-brand-gold mb-8 font-black"
+                        className="text-[10px] tracking-[0.6em] uppercase text-brand-gold mb-6 font-bold"
                     >
-                        NAIROBI, KENYA
+                        Nairobi &middot; Craftsmanship
                     </motion.p>
                     <motion.h1
                         variants={fadeInUp}
-                        className="font-serif text-5xl md:text-8xl lg:text-[7.5rem] font-bold leading-[1.1] mb-12 tracking-tight"
+                        className="font-serif text-6xl md:text-9xl font-bold leading-none mb-10 tracking-tight"
                     >
-                        Capturing <br />
-                        <span className="text-brand-gold italic">Pure Essence</span>
+                        The Art of <br />
+                        <span className="italic">Observation</span>
                     </motion.h1>
                     <motion.p
                         variants={fadeInUp}
-                        className="max-w-2xl mx-auto text-white/60 text-sm md:text-lg font-light leading-relaxed mb-12"
+                        className="max-w-xl mx-auto text-foreground/70 text-base md:text-lg font-light leading-relaxed mb-10 text-balance"
                     >
-                        Artisan photography that defines excellence. Elevating your vision <br className="hidden md:block" /> through an uncompromising lens.
+                        Premium photography defined by precision and emotion. We capture the moments that define your legacy.
                     </motion.p>
 
-                    <motion.div variants={fadeInUp}>
-                        <div className="flex flex-col items-center gap-6">
-                            <span className="text-[9px] tracking-[0.5em] uppercase text-white/30 font-bold">Scroll to Journey</span>
-                            <motion.div
-                                animate={{ y: [0, 10, 0] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="w-px h-16 bg-gradient-to-b from-brand-gold to-transparent"
-                            />
-                        </div>
+                    <motion.div variants={fadeInUp} className="flex justify-center gap-6">
+                        <Link href="#featured" className="px-8 py-3 bg-foreground text-background rounded-full font-bold text-sm hover:scale-105 transition-transform">Explore Series</Link>
+                        <Link href="#" className="px-8 py-3 bg-white/5 border border-white/10 rounded-full font-bold text-sm hover:bg-white/10 transition-colors">Contact</Link>
                     </motion.div>
                 </motion.div>
             </section>
 
-            {/* Horizontal Scroll Series - Pinning Fixed */}
-            <section ref={horizontalRef} id="featured" className="relative h-[400vh] bg-[#050505]">
-                <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-                    <motion.div style={{ x }} className="flex gap-20 px-24 items-center whitespace-nowrap">
+            {/* Horizontal Scroll Series - Adjusted Card Location & Visibility */}
+            <section ref={horizontalRef} id="featured" className="relative h-[400vh] bg-background">
+                <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+                    <motion.div style={{ x }} className="flex gap-16 px-24 items-center">
                         {/* Intro Lead */}
-                        <div className="flex-shrink-0 w-[500px] whitespace-normal">
-                            <span className="text-brand-gold text-[11px] font-bold tracking-[0.4em] uppercase block mb-6">Selected Series</span>
-                            <h2 className="text-5xl md:text-8xl font-display font-black tracking-tighter mb-8 leading-none uppercase">MASTER <br /> PIECES.</h2>
-                            <p className="text-white/40 text-lg max-w-sm leading-relaxed font-light">
-                                Flagship projects where light, shadow, and emotion converge to tell a singular story.
+                        <div className="flex-shrink-0 w-[450px]">
+                            <span className="text-brand-gold text-[10px] font-bold tracking-[0.3em] uppercase block mb-4">Focus Series</span>
+                            <h2 className="text-5xl md:text-7xl font-display font-black tracking-tighter mb-6 uppercase">Selected <br /> Works.</h2>
+                            <p className="text-foreground/40 text-lg max-w-xs leading-relaxed font-light text-balance">
+                                Carefully curated collections where vision meets technical mastery.
                             </p>
                         </div>
 
-                        {/* High Quality Series Cards */}
+                        {/* Mac-Inspired Series Cards - Reduced size for visibility */}
                         <HorizontalCard
-                            src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&q=80&auto=format"
-                            title="Sunset Vows"
-                            category="Wedding"
-                            location="Lake Naivasha, Kenya"
+                            src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=1400&q=80&auto=format"
+                            title="Symmetry"
+                            category="Architectural"
+                            location="Modernist Study No. 1"
                         />
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1400&q=80&auto=format"
-                            title="Golden Horizons"
-                            category="Landscape"
-                            location="Masai Mara Reserve"
+                            title="Tidal Wave"
+                            category="Fine Art"
+                            location="Coastal Reflections"
                         />
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1400&q=80&auto=format"
-                            title="Ethereal Grace"
-                            category="Fashion"
-                            location="Studio Collection 2026"
+                            title="Velvet"
+                            category="Identity"
+                            location="Editorial 2026"
                         />
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=1400&q=80&auto=format"
-                            title="The Artisan"
-                            category="Portrait"
-                            location="Urban Collection"
+                            title="Roots"
+                            category="Documentary"
+                            location="Kibera, Nairobi"
                         />
 
                         {/* End Point */}
-                        <div className="flex-shrink-0 w-[400px] flex flex-col items-center justify-center text-center">
-                            <Link href="#work" className="group flex flex-col items-center">
-                                <div className="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center hover:border-brand-gold transition-all duration-500 group-hover:scale-110">
-                                    <button className="p-2 hover:text-brand-gold transition-colors" aria-label="View Full Portfolio">
-                                        <ArrowRight size={32} className="text-white group-hover:text-brand-gold transition-colors" />
-                                    </button>
+                        <div className="flex-shrink-0 w-[300px] flex flex-col items-center">
+                            <Link href="#work" className="group flex flex-col items-center text-center">
+                                <div className="w-24 h-24 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-all duration-500 group-hover:scale-110">
+                                    <ArrowRight size={24} className="text-foreground" />
                                 </div>
-                                <span className="mt-8 text-[10px] font-bold tracking-[0.4em] uppercase text-white/30 group-hover:text-white">Full Portfolio</span>
+                                <span className="mt-6 text-[10px] font-bold tracking-[0.3em] uppercase text-foreground/30">Archive</span>
                             </Link>
                         </div>
                     </motion.div>
@@ -180,7 +170,7 @@ export default function LandingPage() {
             </section>
 
             {/* Narrative Section */}
-            <section className="py-60 bg-black border-y border-white/5">
+            <section className="py-60 bg-background border-y border-white/5">
                 <div className="max-w-5xl mx-auto px-8 text-center">
                     <span className="text-brand-gold text-[11px] font-bold tracking-[0.8em] uppercase mb-16 block">The Vision</span>
                     <h2 className="text-4xl md:text-7xl font-serif italic text-white/90 leading-tight">
@@ -189,25 +179,24 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Selected Works Grid */}
-            <section id="work" className="py-40 px-6 md:px-12 bg-[#050505]">
-                <div className="max-w-[1600px] mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+            {/* Selected Works Grid - Clean Mac Look */}
+            <section id="work" className="py-32 px-6 md:px-12 bg-background border-t border-white/5">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-8">
                         <div>
-                            <span className="text-brand-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4 block">Archive</span>
-                            <h2 className="text-5xl md:text-[7rem] font-display font-black tracking-tighter uppercase leading-none">THE <span className="text-brand-gold italic font-serif">GALLERY</span></h2>
+                            <h2 className="text-4xl md:text-6xl font-display font-black tracking-tighter uppercase">The Repository</h2>
                         </div>
 
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-2">
                             {categories.map((cat) => (
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`px-8 py-3 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-500 border ${activeCategory === cat
-                                        ? "bg-brand-gold border-brand-gold text-black shadow-[0_0_30px_rgba(212,175,55,0.3)]"
-                                        : "bg-transparent border-white/10 text-white/40 hover:border-white/30"
+                                    className={`px-6 py-2 rounded-full text-[9px] font-bold tracking-widest uppercase transition-all duration-300 ${activeCategory === cat
+                                            ? "bg-foreground text-background shadow-lg"
+                                            : "bg-white/5 text-foreground/40 hover:bg-white/10"
                                         }`}
-                                    aria-label={`Filter by ${cat} category`}
+                                    aria-label={`Filter by ${cat}`}
                                 >
                                     {cat}
                                 </button>
@@ -215,23 +204,23 @@ export default function LandingPage() {
                         </div>
                     </div>
 
-                    <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <AnimatePresence mode="popLayout">
                             {filteredGalleries.map((item, idx) => (
                                 <motion.div
                                     layout
                                     key={item.id}
-                                    initial={{ opacity: 0, y: 40 }}
+                                    initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.6, delay: idx * 0.05 }}
-                                    className={`${item.wide ? 'lg:col-span-2' : ''} group relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-white/5 cursor-pointer shadow-xl`}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.4, delay: idx * 0.05 }}
+                                    className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-white/5 shadow-2xl"
                                 >
-                                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-10 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0">
-                                        <span className="text-brand-gold text-[9px] font-bold tracking-[0.3em] uppercase mb-3">{item.category}</span>
-                                        <h4 className="text-2xl font-serif font-bold text-white mb-1">{item.title}</h4>
-                                        <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">{item.subtitle}</p>
+                                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-500">
+                                        <span className="text-brand-gold text-[8px] font-bold tracking-widest uppercase mb-2">{item.category}</span>
+                                        <h4 className="text-xl font-bold text-white mb-1">{item.title}</h4>
+                                        <p className="text-white/50 text-[10px] uppercase font-light tracking-widest">{item.subtitle}</p>
                                     </div>
                                 </motion.div>
                             ))}
@@ -240,36 +229,28 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Services Breakdown */}
-            <section className="py-40 bg-black">
-                <div className="max-w-[1400px] mx-auto px-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
-                    <ServiceCard title="Weddings" desc="Documenting love stories with cinematic precision." icon={<Camera size={24} />} />
-                    <ServiceCard title="Portraits" desc="Personal sessions that capture unique identity." icon={<Globe size={24} />} />
-                    <ServiceCard title="Editorial" desc="High-end fashion and brand imagery." icon={<ShoppingBag size={24} />} />
-                    <ServiceCard title="Visuals" desc="The raw beauty of the African horizon." icon={<Instagram size={24} />} />
+            {/* Footer - Minimal */}
+            <footer className="py-20 border-t border-white/5 text-center px-8 bg-background">
+                <div className="flex justify-center gap-12 mb-10 text-foreground/40 text-[9px] font-bold tracking-[0.4em] uppercase">
+                    <Link href="#" className="hover:text-foreground transition-colors">Instagram</Link>
+                    <Link href="#" className="hover:text-foreground transition-colors">LinkedIn</Link>
                 </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="py-24 border-t border-white/5 text-center px-8 bg-[#050505]">
-                <div className="flex justify-center gap-16 mb-16 text-white/30 text-[10px] font-bold tracking-[0.6em] uppercase">
-                    <Link href="#" className="hover:text-brand-gold transition-colors">Instagram</Link>
-                    <Link href="#" className="hover:text-brand-gold transition-colors">Behance</Link>
-                    <Link href="#" className="hover:text-brand-gold transition-colors">WhatsApp</Link>
-                </div>
-                <p className="text-white/10 text-[9px] font-bold tracking-[0.5em] uppercase">
-                    © 2026 OYANGE PHOTOGRAPHY. HANDCRAFTED IN NAIROBI.
+                <p className="text-foreground/10 text-[8px] font-bold tracking-widest uppercase">
+                    &copy; 2026 OYANGE Photography. Built for the high-end.
                 </p>
             </footer>
 
-            {/* Booking CTA */}
+            {/* Mac-Style Floating CTA */}
             <motion.div
                 initial={{ y: 100 }}
                 animate={{ y: 0 }}
-                className="fixed bottom-10 right-10 z-[110]"
+                className="fixed bottom-8 right-8 z-[110]"
             >
-                <button className="bg-brand-gold text-black px-10 py-5 rounded-full font-black uppercase tracking-[0.2em] text-[11px] shadow-[0_20px_40px_rgba(212,175,55,0.3)] flex items-center gap-4 hover:scale-105 transition-all active:scale-95" aria-label="Book a Session">
-                    <Calendar size={18} /> Book Session
+                <button
+                    className="glass-card text-foreground px-8 py-4 rounded-full font-bold text-[11px] shadow-2xl flex items-center gap-3 hover:scale-105 hover:bg-white/10 transition-all"
+                    aria-label="Book a Session"
+                >
+                    <Calendar size={16} /> Book Session
                 </button>
             </motion.div>
         </div>
@@ -278,32 +259,20 @@ export default function LandingPage() {
 
 function HorizontalCard({ src, title, category, location }: { src: string, title: string, category: string, location: string }) {
     return (
-        <div className="flex-shrink-0 w-[75vw] md:w-[60vw] max-w-[1100px] whitespace-normal">
-            <div className="group relative aspect-[16/9] overflow-hidden rounded-[3rem] bg-white/5 cursor-pointer shadow-3xl">
+        <div className="flex-shrink-0 w-[60vw] md:w-[45vw] max-w-[800px]">
+            <div className="group relative aspect-[14/9] overflow-hidden rounded-[2.5rem] glass-card shadow-3xl">
                 <Image
                     src={src}
                     alt={title}
                     fill
-                    className="object-cover transition-transform duration-[2s] group-hover:scale-110"
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent p-12 flex flex-col justify-end">
-                    <span className="text-brand-gold text-[10px] tracking-[0.4em] uppercase font-black mb-4">{category}</span>
-                    <h3 className="font-serif text-4xl md:text-7xl font-bold mb-3">{title}</h3>
-                    <p className="text-white/50 text-sm md:text-lg font-light tracking-wide">{location}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent p-10 flex flex-col justify-end">
+                    <span className="text-brand-gold text-[9px] tracking-widest uppercase font-bold mb-3">{category}</span>
+                    <h3 className="text-3xl md:text-4xl font-bold mb-2">{title}</h3>
+                    <p className="text-white/60 text-xs md:text-sm font-light tracking-wide">{location}</p>
                 </div>
             </div>
-        </div>
-    );
-}
-
-function ServiceCard({ title, desc, icon }: { title: string, desc: string, icon: any }) {
-    return (
-        <div className="group p-8 border border-white/5 rounded-3xl hover:bg-white/[0.02] transition-colors">
-            <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-10 group-hover:bg-brand-gold/10 transition-colors duration-500">
-                <div className="text-brand-gold">{icon}</div>
-            </div>
-            <h3 className="text-2xl font-display font-black tracking-tight mb-4 uppercase">{title}</h3>
-            <p className="text-white/40 text-sm leading-relaxed font-light">{desc}</p>
         </div>
     );
 }
@@ -313,7 +282,7 @@ function ScrollProgress() {
     const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
     return (
         <motion.div
-            className="fixed top-0 left-0 right-0 h-[2px] bg-brand-gold z-[1000] origin-left"
+            className="fixed top-0 left-0 right-0 h-[3px] bg-brand-gold z-[1000] origin-left"
             style={{ scaleX }}
         />
     );
@@ -336,11 +305,11 @@ function CustomCursor() {
 
     return (
         <motion.div
-            className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[99999] mix-blend-difference hidden md:block"
+            className="fixed top-0 left-0 w-6 h-6 pointer-events-none z-[99999] mix-blend-difference hidden md:block"
             style={{ x: springX, y: springY, translateX: "-50%", translateY: "-50%" }}
         >
-            <div className="w-full h-full rounded-full border border-white opacity-50" />
-            <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
+            <div className="w-full h-full rounded-full border border-white opacity-40 shrink-0" />
+            <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
         </motion.div>
     );
 }
