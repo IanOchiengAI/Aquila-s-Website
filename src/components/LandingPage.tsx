@@ -1,27 +1,61 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, AnimatePresence, useSpring, useMotionValue } from "framer-motion";
+import { useState, useEffect, useRef, ReactNode } from "react";
+import { motion, useScroll, useTransform, AnimatePresence, useSpring, useMotionValue, useInView } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Globe, Camera, ShoppingBag, Instagram, ChevronDown, Calendar, Menu, X, Search } from "lucide-react";
+import { ArrowRight, Globe, Camera, ShoppingBag, Sparkles, ChevronDown, Calendar, Menu, X, Search } from "lucide-react";
 import galleries from "@/data/galleries.json";
 
-// Animation Variants - Refined for "Mac" feel (soft and snappy)
-const fadeInUp = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] },
+// ─── Animation Variants ───
+const sectionReveal = {
+    hidden: { opacity: 0, y: 60 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+    },
 };
 
-const stagger = {
-    animate: {
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
         transition: {
-            staggerChildren: 0.1,
+            staggerChildren: 0.12,
+            delayChildren: 0.1,
         },
     },
 };
 
+const staggerItem = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    },
+};
+
+const scaleIn = {
+    hidden: { opacity: 0, scale: 0.88 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
+};
+
+const slideUp = {
+    hidden: { opacity: 0, y: 80 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
+};
+
+// ─── Main Component ───
 export default function LandingPage() {
     const [activeCategory, setActiveCategory] = useState("ALL");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,59 +65,58 @@ export default function LandingPage() {
         ? galleries.slice(0, 8)
         : galleries.filter((g) => g.category === activeCategory);
 
-    // Horizontal Scroll Reference - Extended for more "stationary" feel
+    // Horizontal Scroll
     const horizontalRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: horizontalRef,
         offset: ["start start", "end end"]
     });
 
-    // Calculate X transform - Zero-gap start with a generous "sticky" hold at the beginning and end (0.15 to 0.65)
     const baseTranslateX = useTransform(scrollYProgress, [0.15, 0.65], ["0%", "-65%"]);
     const x = useSpring(baseTranslateX, { stiffness: 400, damping: 90 });
 
     // Hero Parallax
     const { scrollY } = useScroll();
-    const heroTextY = useTransform(scrollY, [0, 500], [0, 100]);
-    const heroImageY = useTransform(scrollY, [0, 500], [0, 50]);
+    const heroTextY = useTransform(scrollY, [0, 600], [0, 120]);
+    const heroImageY = useTransform(scrollY, [0, 600], [0, 60]);
+    const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
     return (
-        <div className="bg-background text-foreground selection:bg-brand-gold selection:text-white font-sans foggy-depth">
+        <div className="bg-background text-foreground selection:bg-brand-gold selection:text-white font-sans foggy-depth noise-overlay">
             <CustomCursor />
             <ScrollProgress />
 
-            {/* ... Existing Nav ... */}
+            {/* ─── Navigation ─── */}
             <motion.nav
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.8, ease: "circOut" }}
-                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-7xl glass-card rounded-[2rem] flex items-center justify-between px-10 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.02)]"
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
+                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-7xl glass-card rounded-[2rem] flex items-center justify-between px-10 py-3"
             >
                 <div className="flex items-center gap-12">
                     <span className="text-xl font-display font-black tracking-widest uppercase">
                         OYANGE
                     </span>
                     <div className="hidden lg:flex gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-foreground/40">
-                        <Link href="#featured" className="hover:text-foreground transition-all">Series</Link>
-                        <Link href="#work" className="hover:text-foreground transition-all">Archive</Link>
-                        <Link href="#" className="hover:text-foreground transition-all">Studios</Link>
+                        <Link href="#featured" className="hover:text-foreground transition-all duration-300">Series</Link>
+                        <Link href="#work" className="hover:text-foreground transition-all duration-300">Archive</Link>
+                        <Link href="#" className="hover:text-foreground transition-all duration-300">Studios</Link>
                     </div>
                 </div>
 
-                {/* Mac-Style Search Bar - Refined contrast */}
                 <div className="hidden md:flex flex-1 max-w-lg mx-8">
                     <div className="relative w-full group">
-                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-brand-gold transition-colors" />
+                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-brand-gold transition-colors duration-300" />
                         <input
                             type="text"
                             placeholder="Search images, series, studios..."
-                            className="w-full bg-black/[0.04] border border-black/5 rounded-2xl py-2.5 pl-11 pr-4 text-[13px] font-medium outline-none focus:bg-white focus:ring-4 focus:ring-brand-gold/5 focus:border-brand-gold/10 transition-all placeholder:text-foreground/20 shadow-inner"
+                            className="w-full bg-black/[0.03] border border-black/[0.04] rounded-2xl py-2.5 pl-11 pr-4 text-[13px] font-medium outline-none focus:bg-white focus:ring-4 focus:ring-brand-gold/5 focus:border-brand-gold/10 transition-all duration-500 placeholder:text-foreground/20"
                         />
                     </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <button className="hidden sm:flex px-6 py-2.5 bg-foreground text-background rounded-full font-bold text-[11px] uppercase tracking-wider hover:scale-105 transition-all shadow-md">
+                    <button className="hidden sm:flex px-6 py-2.5 bg-foreground text-background rounded-full font-bold text-[11px] uppercase tracking-wider hover:scale-105 active:scale-95 transition-all duration-300 shadow-md">
                         Contact
                     </button>
                     <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 hover:bg-black/5 rounded-full transition-all md:hidden" aria-label="Toggle Menu">
@@ -92,249 +125,422 @@ export default function LandingPage() {
                 </div>
             </motion.nav>
 
-            {/* Hero Section - Airy & Light */}
+            {/* ─── Hero Section ─── */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <motion.div style={{ y: heroImageY }} className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-background z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-background z-10" />
                     <Image
                         src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80&auto=format"
                         alt="Hero Background"
                         fill
-                        className="object-cover opacity-95 scale-105"
+                        className="object-cover opacity-90 scale-110"
                         priority
                     />
                 </motion.div>
 
                 <motion.div
-                    style={{ y: heroTextY }}
-                    variants={stagger}
-                    initial="initial"
-                    animate="animate"
+                    style={{ y: heroTextY, opacity: heroOpacity }}
                     className="relative z-20 text-center px-6"
                 >
                     <motion.p
-                        variants={fadeInUp}
-                        className="text-[11px] tracking-[0.5em] uppercase text-brand-gold mb-6 font-black"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                        className="text-[11px] tracking-[0.5em] uppercase text-brand-gold mb-8 font-black"
                     >
                         Nairobi &middot; Kenya
                     </motion.p>
                     <motion.h1
-                        variants={fadeInUp}
-                        className="font-serif text-6xl md:text-[9rem] font-bold leading-[0.9] mb-12 tracking-tighter text-foreground"
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, delay: 1, ease: [0.22, 1, 0.36, 1] }}
+                        className="font-serif text-6xl md:text-[9rem] font-bold leading-[0.9] mb-12 tracking-tighter"
                     >
                         Defining <br />
-                        <span className="italic text-brand-gold font-serif">Simplicity.</span>
+                        <span className="gold-shimmer italic font-serif">Simplicity.</span>
                     </motion.h1>
                     <motion.p
-                        variants={fadeInUp}
-                        className="max-w-xl mx-auto text-foreground/50 text-base md:text-xl font-light leading-relaxed mb-12 text-balance"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
+                        className="max-w-xl mx-auto text-foreground/50 text-base md:text-xl font-light leading-relaxed mb-14 text-balance"
                     >
                         Artisanal photography that uncovers the raw elegance in every frame. We don&apos;t just take photos; we craft legacies.
                     </motion.p>
 
-                    <motion.div variants={fadeInUp} className="flex justify-center gap-6">
-                        <Link href="#featured" className="px-12 py-5 bg-foreground text-background rounded-full font-bold text-[12px] uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-2xl">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 1.6, ease: [0.22, 1, 0.36, 1] }}
+                        className="flex justify-center gap-6"
+                    >
+                        <Link href="#featured" className="group px-12 py-5 bg-foreground text-background rounded-full font-bold text-[12px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all duration-300 shadow-2xl flex items-center gap-3">
                             The Gallery
+                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                         </Link>
+                    </motion.div>
+                </motion.div>
+
+                {/* Scroll Indicator */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2.5, duration: 1 }}
+                    className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20"
+                >
+                    <motion.div
+                        animate={{ y: [0, 8, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                        <ChevronDown size={24} className="text-foreground/20" />
                     </motion.div>
                 </motion.div>
             </section>
 
-            {/* Horizontal Scroll Series - Increased sequence height for longer pinning */}
+            {/* ─── Horizontal Scroll Series ─── */}
             <section ref={horizontalRef} id="featured" className="relative h-[800vh] bg-background">
-                <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-b from-background via-white/[0.2] to-background">
+                <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
                     <motion.div style={{ x }} className="flex gap-20 px-24 items-center">
                         {/* Intro Lead */}
-                        <div className="flex-shrink-0 w-[500px]">
-                            <span className="text-brand-gold text-[10px] font-black tracking-[0.4em] uppercase block mb-6">Discovery</span>
-                            <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter mb-8 uppercase leading-none text-foreground/90">THE <br /> SERIES.</h2>
-                            <p className="text-foreground/40 text-xl max-w-sm leading-relaxed font-light text-balance">
+                        <motion.div
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={staggerContainer}
+                            className="flex-shrink-0 w-[500px]"
+                        >
+                            <motion.span variants={staggerItem} className="text-brand-gold text-[10px] font-black tracking-[0.4em] uppercase block mb-6">Discovery</motion.span>
+                            <motion.h2 variants={staggerItem} className="text-6xl md:text-8xl font-display font-black tracking-tighter mb-8 uppercase leading-none text-foreground/90">THE <br /> SERIES.</motion.h2>
+                            <motion.p variants={staggerItem} className="text-foreground/40 text-xl max-w-sm leading-relaxed font-light text-balance">
                                 Our most significant collections, captured with uncompromising vision.
-                            </p>
-                        </div>
+                            </motion.p>
+                        </motion.div>
 
-                        {/* Foggy Mac Cards */}
+                        {/* Cards with Parallax */}
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=1400&q=80&auto=format"
                             title="Symmetry"
                             category="Architectural"
                             location="Modernist Study No. 1"
+                            idx={0}
                         />
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1400&q=80&auto=format"
                             title="Tidal Wave"
                             category="Wildlife"
                             location="Masai Mara Reserve"
+                            idx={1}
                         />
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1400&q=80&auto=format"
                             title="Velvet"
                             category="Editorial"
                             location="Nairobi Studio"
+                            idx={2}
                         />
                         <HorizontalCard
                             src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=1400&q=80&auto=format"
                             title="Roots"
                             category="Documentary"
                             location="Cultural Archive"
+                            idx={3}
                         />
 
                         {/* End Point */}
                         <div className="flex-shrink-0 w-[400px] flex flex-col items-center">
                             <Link href="#work" className="group flex flex-col items-center text-center">
-                                <div className="w-28 h-28 rounded-full glass-card flex items-center justify-center hover:bg-black/5 hover:border-brand-gold/30 transition-all duration-500 group-hover:scale-110">
-                                    <ArrowRight size={28} className="text-foreground/40 group-hover:text-brand-gold" />
-                                </div>
-                                <span className="mt-8 text-[11px] font-black tracking-[0.4em] uppercase text-foreground/20 group-hover:text-foreground/40">Archive</span>
+                                <motion.div
+                                    whileHover={{ scale: 1.15, rotate: 90 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                    className="w-28 h-28 rounded-full glass-card gold-glow flex items-center justify-center"
+                                >
+                                    <ArrowRight size={28} className="text-foreground/40 group-hover:text-brand-gold transition-colors duration-300" />
+                                </motion.div>
+                                <span className="mt-8 text-[11px] font-black tracking-[0.4em] uppercase text-foreground/20 group-hover:text-brand-gold transition-colors duration-300">Archive</span>
                             </Link>
                         </div>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Narrative Section - Foggy Bridge */}
-            <section className="py-72 bg-white/30 border-y border-black/[0.03]">
+            {/* ─── Philosophy Quote ─── */}
+            <RevealSection className="py-48 md:py-72 bg-gradient-to-b from-background via-white/40 to-background border-y border-black/[0.02]">
                 <div className="max-w-5xl mx-auto px-8 text-center">
-                    <span className="text-brand-gold text-[10px] font-black tracking-[0.6em] uppercase mb-20 block">Philosophy</span>
-                    <h2 className="text-4xl md:text-7xl font-serif italic text-foreground/80 leading-[1.2] tracking-tight">
+                    <motion.span
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        className="text-brand-gold text-[10px] font-black tracking-[0.6em] uppercase mb-20 block"
+                    >
+                        Philosophy
+                    </motion.span>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.4 }}
+                        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+                        className="text-4xl md:text-7xl font-serif italic text-foreground/70 leading-[1.2] tracking-tight"
+                    >
                         &quot;To find the extraordinary within the mundane is the photographer&apos;s greatest achievement.&quot;
-                    </h2>
+                    </motion.h2>
                 </div>
-            </section>
+            </RevealSection>
 
-            {/* Repository Grid - Mac Style */}
-            <section id="work" className="py-40 px-6 md:px-12 bg-background border-t border-black/[0.02]">
+            {/* ─── Repository Grid ─── */}
+            <section id="work" className="py-40 px-6 md:px-12 bg-background">
                 <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-baseline mb-24 gap-8">
-                        <div>
+                    {/* Header */}
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.3 }}
+                        variants={staggerContainer}
+                        className="flex flex-col md:flex-row justify-between items-baseline mb-24 gap-8"
+                    >
+                        <motion.div variants={staggerItem}>
                             <span className="text-brand-gold text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Archive</span>
-                            <h2 className="text-5xl md:text-[5.5rem] font-display font-black tracking-tighter uppercase leading-none">THE <span className="font-serif italic text-brand-gold">REPOS</span></h2>
-                        </div>
+                            <h2 className="text-5xl md:text-[5.5rem] font-display font-black tracking-tighter uppercase leading-none">THE <span className="gold-shimmer font-serif italic">REPOS</span></h2>
+                        </motion.div>
 
-                        <div className="flex flex-wrap gap-2.5">
+                        <motion.div variants={staggerItem} className="flex flex-wrap gap-2.5">
                             {categories.map((cat) => (
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`px-7 py-3 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-300 border ${activeCategory === cat
+                                    className={`px-7 py-3 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 border ${activeCategory === cat
                                         ? "bg-foreground text-background border-foreground shadow-[0_15px_30px_rgba(0,0,0,0.1)]"
-                                        : "bg-black/[0.03] border-transparent text-foreground/40 hover:bg-black/[0.06]"
+                                        : "bg-black/[0.03] border-transparent text-foreground/40 hover:bg-black/[0.06] hover:text-foreground/60"
                                         }`}
                                     aria-label={`Filter by ${cat}`}
                                 >
                                     {cat}
                                 </button>
                             ))}
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
 
+                    {/* Grid */}
                     <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                         <AnimatePresence mode="popLayout">
                             {filteredGalleries.map((item, idx) => (
-                                <motion.div
-                                    layout
-                                    key={item.id}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ duration: 0.5, delay: idx * 0.05 }}
-                                    className="group relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-black/[0.02] shadow-[0_30px_60px_rgba(0,0,0,0.05)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.1)] transition-all duration-700"
-                                >
-                                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent p-10 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-700">
-                                        <span className="text-brand-gold text-[9px] font-black tracking-widest uppercase mb-3">{item.category}</span>
-                                        <h4 className="text-2xl font-bold text-white mb-1">{item.title}</h4>
-                                        <p className="text-white/60 text-[11px] uppercase font-bold tracking-widest">{item.subtitle}</p>
-                                    </div>
-                                </motion.div>
+                                <RepositoryCard key={item.id} item={item} idx={idx} />
                             ))}
                         </AnimatePresence>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Services Breakdown - Elegant Cards */}
-            <section className="py-40 bg-white/20">
-                <div className="max-w-7xl mx-auto px-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
-                    <ServiceCard title="Weddings" desc="Documenting love with cinematic nuance and technical grace." icon={<Camera size={20} />} />
-                    <ServiceCard title="Branding" desc="Elevating identity through high-precision visual storytelling." icon={<Globe size={20} />} />
-                    <ServiceCard title="Editorial" desc="Cutting-edge fashion imagery for the modern artisan." icon={<ShoppingBag size={20} />} />
-                    <ServiceCard title="Fine Art" desc="Exploring the soul of the landscape through art." icon={<Instagram size={20} />} />
-                </div>
-            </section>
+            {/* ─── Services ─── */}
+            <RevealSection className="py-40 bg-gradient-to-b from-background via-white/20 to-background">
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    variants={staggerContainer}
+                    className="max-w-7xl mx-auto px-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-10"
+                >
+                    <TiltCard title="Weddings" desc="Documenting love with cinematic nuance and technical grace." icon={<Camera size={20} />} idx={0} />
+                    <TiltCard title="Branding" desc="Elevating identity through high-precision visual storytelling." icon={<Globe size={20} />} idx={1} />
+                    <TiltCard title="Editorial" desc="Cutting-edge fashion imagery for the modern artisan." icon={<ShoppingBag size={20} />} idx={2} />
+                    <TiltCard title="Fine Art" desc="Exploring the soul of the landscape through art." icon={<Sparkles size={20} />} idx={3} />
+                </motion.div>
+            </RevealSection>
 
-            {/* Footer - Minimal & Clean */}
-            <footer className="py-24 border-t border-black/[0.02] text-center px-8 bg-background">
-                <div className="flex justify-center gap-16 mb-12 text-foreground/30 text-[10px] font-black tracking-[0.5em] uppercase">
-                    <Link href="#" className="hover:text-brand-gold transition-colors">Instagram</Link>
-                    <Link href="#" className="hover:text-brand-gold transition-colors">Behance</Link>
-                    <Link href="#" className="hover:text-brand-gold transition-colors">WhatsApp</Link>
-                </div>
-                <p className="text-foreground/10 text-[9px] font-black tracking-[0.4em] uppercase">
+            {/* ─── Footer ─── */}
+            <motion.footer
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+                className="py-24 border-t border-black/[0.02] text-center px-8 bg-background"
+            >
+                <motion.div variants={staggerItem} className="flex justify-center gap-16 mb-12 text-foreground/30 text-[10px] font-black tracking-[0.5em] uppercase">
+                    <Link href="#" className="hover:text-brand-gold transition-colors duration-300">Instagram</Link>
+                    <Link href="#" className="hover:text-brand-gold transition-colors duration-300">Behance</Link>
+                    <Link href="#" className="hover:text-brand-gold transition-colors duration-300">WhatsApp</Link>
+                </motion.div>
+                <motion.p variants={staggerItem} className="text-foreground/10 text-[9px] font-black tracking-[0.4em] uppercase">
                     © 2026 OYANGE STUDIO. CRAFTED FOR THE DISCERNING.
-                </p>
-            </footer>
+                </motion.p>
+            </motion.footer>
 
-            {/* Mac-Style Floating CTA */}
+            {/* ─── Floating CTA ─── */}
             <motion.div
-                initial={{ y: 100 }}
-                animate={{ y: 0 }}
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 className="fixed bottom-10 right-10 z-[110]"
             >
-                <button
-                    className="px-10 py-5 bg-foreground text-background rounded-full font-black text-[12px] uppercase tracking-[0.2em] shadow-[0_25px_50px_rgba(0,0,0,0.15)] flex items-center gap-4 hover:scale-105 active:scale-95 transition-all"
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="cta-breathe px-10 py-5 bg-foreground text-background rounded-full font-black text-[12px] uppercase tracking-[0.2em] flex items-center gap-4 transition-colors duration-300"
                     aria-label="Book a Session"
                 >
                     <Calendar size={18} /> Book Session
-                </button>
+                </motion.button>
             </motion.div>
         </div>
     );
 }
 
-function HorizontalCard({ src, title, category, location }: { src: string, title: string, category: string, location: string }) {
+// ─── Horizontal Card with Parallax Inner Image ───
+function HorizontalCard({ src, title, category, location, idx }: { src: string, title: string, category: string, location: string, idx: number }) {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const isInView = useInView(cardRef, { once: true, amount: 0.3 });
+
     return (
-        <div className="flex-shrink-0 w-[65vw] md:w-[45vw] max-w-[850px]">
-            <div className="group relative aspect-[14/9] overflow-hidden rounded-[3rem] glass-card shadow-[0_30px_80px_rgba(0,0,0,0.06)] hover:shadow-[0_40px_100px_rgba(0,0,0,0.1)] transition-all duration-700">
-                <Image
-                    src={src}
-                    alt={title}
-                    fill
-                    className="object-cover transition-transform duration-[2s] group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent p-12 flex flex-col justify-end">
-                    <span className="text-brand-gold text-[10px] tracking-[0.4em] uppercase font-black mb-4">{category}</span>
-                    <h3 className="text-4xl md:text-5xl font-bold mb-3 text-white">{title}</h3>
-                    <p className="text-white/60 text-sm md:text-base font-medium tracking-wide">{location}</p>
+        <motion.div
+            ref={cardRef}
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="flex-shrink-0 w-[65vw] md:w-[45vw] max-w-[850px]"
+        >
+            <motion.div
+                whileHover={{ y: -8 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="group relative aspect-[14/9] overflow-hidden rounded-[3rem] gold-glow shadow-[0_30px_80px_rgba(0,0,0,0.06)] transition-all duration-700"
+            >
+                <div className="absolute inset-0 overflow-hidden rounded-[3rem]">
+                    <Image
+                        src={src}
+                        alt={title}
+                        fill
+                        className="object-cover transition-transform duration-[2.5s] group-hover:scale-110"
+                    />
                 </div>
-            </div>
-        </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-12 flex flex-col justify-end">
+                    <motion.span
+                        initial={{ x: -20, opacity: 0 }}
+                        whileInView={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                        className="text-brand-gold-light text-[10px] tracking-[0.4em] uppercase font-black mb-4 inline-block"
+                    >
+                        {category}
+                    </motion.span>
+                    <h3 className="text-4xl md:text-5xl font-bold mb-3 text-white tracking-tight">{title}</h3>
+                    <p className="text-white/50 text-sm md:text-base font-medium tracking-wide">{location}</p>
+                </div>
+            </motion.div>
+        </motion.div>
     );
 }
 
-function ServiceCard({ title, desc, icon }: { title: string, desc: string, icon: any }) {
+// ─── Repository Card with Animated Hover Overlay ───
+function RepositoryCard({ item, idx }: { item: typeof galleries[0], idx: number }) {
     return (
-        <div className="group p-10 bg-white/40 border border-black/[0.03] rounded-[3rem] hover:bg-white/60 transition-all duration-500 hover:shadow-xl">
-            <div className="w-12 h-12 rounded-2xl glass-card flex items-center justify-center mb-10 group-hover:bg-brand-gold/10 transition-colors duration-500">
-                <div className="text-brand-gold">{icon}</div>
-            </div>
-            <h3 className="text-2xl font-display font-black tracking-tight mb-4 uppercase">{title}</h3>
-            <p className="text-foreground/40 text-sm leading-relaxed font-light">{desc}</p>
-        </div>
+        <motion.div
+            layout
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.7, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+        >
+            <motion.div
+                whileHover={{ y: -10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="group relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-black/[0.02] gold-glow cursor-pointer"
+            >
+                <Image src={item.cover} alt={item.title} fill className="object-cover transition-transform duration-[2s] group-hover:scale-110" />
+
+                {/* Always visible bottom bar */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+                    <span className="text-brand-gold-light text-[9px] font-black tracking-widest uppercase block mb-2">{item.category}</span>
+                    <h4 className="text-xl font-bold text-white tracking-tight">{item.title}</h4>
+                </div>
+
+                {/* Hover overlay — slides up */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] p-10 flex flex-col justify-end">
+                    <motion.span className="text-brand-gold-light text-[9px] font-black tracking-widest uppercase mb-3">{item.category}</motion.span>
+                    <h4 className="text-2xl font-bold text-white mb-2 tracking-tight">{item.title}</h4>
+                    <p className="text-white/50 text-[11px] uppercase font-bold tracking-widest mb-4">{item.subtitle}</p>
+                    <div className="flex items-center gap-2 text-white/40 text-[10px] font-bold tracking-wider uppercase">
+                        <span>View Project</span>
+                        <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
     );
 }
 
+// ─── 3D Tilt Service Card ───
+function TiltCard({ title, desc, icon, idx }: { title: string, desc: string, icon: ReactNode, idx: number }) {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), { stiffness: 300, damping: 30 });
+    const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 30 });
+
+    function handleMouse(e: React.MouseEvent) {
+        const rect = cardRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+        mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+    }
+
+    function handleLeave() {
+        mouseX.set(0);
+        mouseY.set(0);
+    }
+
+    return (
+        <motion.div
+            variants={staggerItem}
+            ref={cardRef}
+            onMouseMove={handleMouse}
+            onMouseLeave={handleLeave}
+            style={{ rotateX, rotateY, transformPerspective: 1200 }}
+            className="group p-10 bg-white/40 border border-black/[0.03] rounded-[3rem] hover:bg-white/70 transition-all duration-500 gold-glow cursor-pointer"
+        >
+            <motion.div
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="w-12 h-12 rounded-2xl glass-card flex items-center justify-center mb-10 group-hover:bg-brand-gold/10 transition-colors duration-500"
+            >
+                <div className="text-brand-gold">{icon}</div>
+            </motion.div>
+            <h3 className="text-2xl font-display font-black tracking-tight mb-4 uppercase group-hover:text-brand-gold transition-colors duration-500">{title}</h3>
+            <p className="text-foreground/40 text-sm leading-relaxed font-light">{desc}</p>
+        </motion.div>
+    );
+}
+
+// ─── Section Reveal Wrapper ───
+function RevealSection({ children, className = "" }: { children: ReactNode, className?: string }) {
+    return (
+        <motion.section
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={sectionReveal}
+            className={className}
+        >
+            {children}
+        </motion.section>
+    );
+}
+
+// ─── Scroll Progress Bar ───
 function ScrollProgress() {
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
     return (
         <motion.div
-            className="fixed top-0 left-0 right-0 h-[3px] bg-brand-gold z-[1000] origin-left"
-            style={{ scaleX }}
+            className="fixed top-0 left-0 right-0 h-[2px] z-[1000] origin-left"
+            style={{
+                scaleX,
+                background: "linear-gradient(90deg, #b58d10, #d4af37, #b58d10)",
+            }}
         />
     );
 }
 
+// ─── Custom Cursor ───
 function CustomCursor() {
     const mouseX = useMotionValue(-100);
     const mouseY = useMotionValue(-100);

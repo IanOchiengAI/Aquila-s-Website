@@ -3,71 +3,151 @@
 @theme {
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
+  --font-display: var(--font-syne);
   --color-background: #fbfbfd;
   --color-foreground: #1d1d1f;
   --color-brand-gold: #b58d10;
+  --color-brand-gold-light: #d4af37;
   --color-brand-gray: #86868b;
-  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(0, 0, 0, 0.04);
 }
 
-/* Custom Utilities */
+/* ─── Foggy Depth Background ─── */
 .foggy-depth {
-  background: radial-gradient(circle at top left, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 247, 1) 100%);
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(212, 175, 55, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, #fbfbfd 0%, #f5f5f7 100%);
   position: relative;
 }
 
 .foggy-depth::before {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
   background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
-  opacity: 0.02;
+  opacity: 0.012;
   pointer-events: none;
+  z-index: 0;
 }
 
+/* ─── Noise Texture Overlay ─── */
+.noise-overlay::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+/* ─── Text Utilities ─── */
 .text-balance {
   text-wrap: balance;
 }
 
+/* ─── Gold Shimmer Gradient (Animated) ─── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(110deg,
+      #b58d10 0%,
+      #d4af37 25%,
+      #f0d060 50%,
+      #d4af37 75%,
+      #b58d10 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+/* ─── Glass Card (Premium) ─── */
 .glass-card {
   background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  backdrop-filter: blur(30px) saturate(200%);
   border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 4px 20px rgba(0, 0, 0, 0.01),
+    0 20px 40px rgba(0, 0, 0, 0.02);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.outline-text {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+.glass-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 8px 30px rgba(0, 0, 0, 0.04),
+    0 30px 60px rgba(0, 0, 0, 0.04);
 }
 
-.outline-text:hover {
-  -webkit-text-stroke: 1px var(--color-brand-gold);
+/* ─── Gold Glow Hover ─── */
+.gold-glow {
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+.gold-glow:hover {
+  box-shadow:
+    0 0 30px rgba(181, 141, 16, 0.08),
+    0 0 60px rgba(181, 141, 16, 0.04),
+    0 20px 40px rgba(0, 0, 0, 0.06);
+  border-color: rgba(181, 141, 16, 0.15);
+}
+
+/* ─── Breathing Pulse (CTA) ─── */
+@keyframes breathe {
+
+  0%,
+  100% {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  50% {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 0 0 4px rgba(181, 141, 16, 0.08);
+  }
+}
+
+.cta-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* ─── Body ─── */
 body {
   background: var(--color-background);
   color: var(--color-foreground);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
   background-color: var(--color-brand-gold);
-  color: #000;
+  color: #fff;
 }
 
-/* Custom Scrollbar */
+/* ─── Scrollbar (Light Theme) ─── */
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #f0f0f2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1a1a1a;
+  background: #c8c8cc;
   border-radius: 10px;
 }
 
