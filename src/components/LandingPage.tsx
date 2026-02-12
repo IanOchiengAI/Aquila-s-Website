@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, ReactNode } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Globe, Camera, ShoppingBag, Sparkles, Calendar, MapPin, Layers, Heart, Zap, Image as ImageIcon } from "lucide-react";
+import { ArrowRight, MapPin, Calendar } from "lucide-react";
 import galleries from "@/data/galleries.json";
 
 const heroImages = [
@@ -13,14 +13,6 @@ const heroImages = [
     "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=80&auto=format",
     "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=1600&q=80&auto=format",
     "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80&auto=format"
-];
-
-const categoryExplorer = [
-    { id: "persona", name: "PERSONA", label: "Portraits", desc: "Soul deep beauty in Every Gaze", icon: <Heart size={20} />, cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1000&q=80&auto=format" },
-    { id: "union", name: "UNION", label: "Weddings", desc: "The unrepeatable history of souls", icon: <Layers size={20} />, cover: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&q=80&auto=format" },
-    { id: "brief", name: "BRIEF", label: "Commercial", desc: "Geometric elegance meeting light", icon: <Zap size={20} />, cover: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1000&q=80&auto=format" },
-    { id: "chronicle", name: "CHRONICLE", label: "Documentary", desc: "The rhythm of life in frame", icon: <ImageIcon size={20} />, cover: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=1400&q=80&auto=format" },
-    { id: "expedition", name: "ADVENTURE", label: "Expedition", desc: "Beauty found in furthest corners", icon: <Globe size={20} />, cover: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1000&q=80&auto=format" }
 ];
 
 // ─── Animation Curves & Variants ───
@@ -73,20 +65,10 @@ export default function LandingPage() {
         offset: ["start start", "end end"]
     });
 
-    // Stacking Cards Logic (Reverted & Refined)
-    // Entrance Phase (0%–18%): Cards rise from below and scale up
-    // Scroll Phase (18%–95%): Cards slide horizontally
-    const entranceY = useTransform(scrollYProgress, [0, 0.18], ["40vh", "0vh"]);
-    const entranceScale = useTransform(scrollYProgress, [0, 0.18], [0.8, 1]);
-    const entranceOpacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-
     // Slide distance adjusted for a more cinematic exit
     const baseTranslateX = useTransform(scrollYProgress, [0.18, 0.9], ["0%", "-115%"]);
 
     const x = useSpring(baseTranslateX, { stiffness: 100, damping: 30 });
-    const y = useSpring(entranceY, { stiffness: 200, damping: 40 });
-    const scale = useSpring(entranceScale, { stiffness: 200, damping: 40 });
-    const opacity = useSpring(entranceOpacity, { stiffness: 200, damping: 40 });
 
     // Hero Parallax
     const { scrollY } = useScroll();
@@ -235,7 +217,14 @@ export default function LandingPage() {
 
                         {/* Individual Gallery Cards */}
                         {featuredSeries.map((item, i) => (
-                            <HorizontalCard key={item.id} {...item} idx={i} src={item.cover} scrollYProgress={scrollYProgress} />
+                            <div key={item.id} className="contents">
+                                <div className="hidden md:block">
+                                    <HorizontalCard {...item} idx={i} src={item.cover} scrollYProgress={scrollYProgress} />
+                                </div>
+                                <div className="block md:hidden w-full">
+                                    <MobileParallaxCard {...item} idx={i} src={item.cover} />
+                                </div>
+                            </div>
                         ))}
 
                         {/* End Point */}
@@ -243,6 +232,7 @@ export default function LandingPage() {
                             <Link href="/work" className="group flex flex-col items-center text-center">
                                 <motion.div
                                     whileHover={{ scale: 1.08 }}
+                                    whileTap={{ scale: 0.95 }}
                                     className="w-28 h-28 rounded-full bg-black text-white flex items-center justify-center shadow-[0_16px_60px_rgba(0,0,0,0.1)] transition-all duration-500"
                                 >
                                     <ArrowRight size={40} className="group-hover:translate-x-2 transition-transform duration-300" />
@@ -540,79 +530,6 @@ function RepositoryCard({ item, idx }: { item: any, idx: number }) {
     );
 }
 
-// ─── Glass Service Card (with tilt) ───
-function TiltCard({ title, desc, icon, idx }: { title: string, desc: string, icon: ReactNode, idx: number }) {
-    const cardRef = useRef<HTMLDivElement>(null);
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 400, damping: 40 });
-    const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 400, damping: 40 });
-
-    function handleMouse(e: React.MouseEvent) {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-        mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-    }
-
-    function handleLeave() {
-        mouseX.set(0);
-        mouseY.set(0);
-    }
-
-    return (
-        <motion.div
-            variants={staggerItem}
-            ref={cardRef}
-            onMouseMove={handleMouse}
-            onMouseLeave={handleLeave}
-            style={{ rotateX, rotateY, transformPerspective: 1500 }}
-            className="group p-10 glass-card gold-glow hover:-translate-y-2 transition-all duration-700 cursor-pointer"
-        >
-            <div className="w-14 h-14 rounded-2xl bg-brand-gold/15 text-brand-gold flex items-center justify-center mb-8 border border-brand-gold/10">
-                {icon}
-            </div>
-            <h3 className="text-2xl font-display font-black tracking-tight mb-4 text-foreground">{title}</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed font-light">{desc}</p>
-        </motion.div>
-    );
-}
-
-// ─── Category Card (for Horizontal Scroll) ───
-function CategoryCard({ name, label, desc, icon, cover, idx, scrollYProgress }: { name: string, label: string, desc: string, icon: ReactNode, cover: string, idx: number, scrollYProgress: any }) {
-    const cardRef = useRef<HTMLDivElement>(null);
-    const isInView = useInView(cardRef, { once: true, amount: 0.3 });
-
-    return (
-        <motion.div
-            ref={cardRef}
-            initial={{ opacity: 0, scale: 0.94 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 1.2, delay: idx * 0.1, ease: ease }}
-            className="flex-shrink-0 w-[450px] md:w-[650px] aspect-[4/5] relative group overflow-hidden rounded-3xl shadow-[0_32px_100px_rgba(0,0,0,0.4)] border border-white/10"
-        >
-            <Link href={`/work/${name.toLowerCase()}`} className="block h-full">
-                <Image src={cover} alt={label} fill className="object-cover transition-all duration-[2.5s] group-hover:scale-110 opacity-70 group-hover:opacity-100" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-green via-brand-green/20 to-transparent p-12 flex flex-col justify-end">
-                    <motion.div
-                        style={{ opacity: useTransform(scrollYProgress, [0.1, 0.4], [0, 0.6]) }}
-                        className="absolute inset-0 bg-brand-green blur-[160px] pointer-events-none group-hover:bg-brand-green/80 transition-colors duration-1000"
-                    />
-                    <div className="relative z-10">
-                        <span className="text-brand-gold text-[12px] font-semibold tracking-[0.4em] uppercase mb-4 block">{name}</span>
-                        <h3 className="text-5xl md:text-7xl font-display font-black text-marble-white transition-colors duration-700 mb-4 tracking-tighter leading-none">{label}</h3>
-                        <p className="text-brand-gold font-medium tracking-[0.2em] uppercase text-sm mb-1">{desc}</p>
-                    </div>
-                </div>
-
-                <div className="absolute top-8 right-8 w-14 h-14 rounded-full glass-card flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-600 translate-x-4 group-hover:translate-x-0">
-                    <ArrowRight size={24} className="text-white" />
-                </div>
-            </Link>
-        </motion.div>
-    );
-}
 
 // ─── Section Reveal Wrapper ───
 function RevealSection({ children, className = "" }: { children: ReactNode, className?: string }) {
@@ -708,6 +625,90 @@ function CustomCursor() {
         >
             <div className="w-full h-full rounded-full border border-white/50 shrink-0" />
             <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
+        </motion.div>
+    );
+}
+
+// ─── Mobile Parallax Card (Scroll-Driven 3D Tilt) ───
+function MobileParallaxCard({ src, title, category, location, idx }: { src: string, title: string, category: string, location: string, idx: number }) {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: cardRef,
+        offset: ["start end", "end start"]
+    });
+
+    // 3D Tilt Effect based on scroll position
+    const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [15, 0, -15]);
+    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 0.9]);
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+    // Glare/Shine Effect moving across the card
+    const shineX = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+    const shineOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.4, 0]);
+
+    return (
+        <motion.div
+            ref={cardRef}
+            style={{
+                rotateX,
+                scale,
+                opacity,
+                transformPerspective: 800
+            }}
+            className="w-full aspect-[4/5] relative group overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-white/5 mb-16 last:mb-0"
+        >
+            <Link href={`/work/${category.toLowerCase()}`} className="block h-full">
+                <motion.div
+                    className="absolute inset-0 z-0"
+                    style={{ scale: 1.2 }}
+                >
+                    <Image
+                        src={src}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                    />
+                </motion.div>
+
+                {/* Living Shine Effect */}
+                <motion.div
+                    style={{
+                        background: `linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 45%, transparent 60%)`,
+                        left: shineX,
+                        opacity: shineOpacity
+                    }}
+                    className="absolute inset-0 z-10 w-[200%] -translate-x-1/2 pointer-events-none"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-8 flex flex-col justify-end z-20">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.5 }}
+                        variants={{
+                            visible: { transition: { staggerChildren: 0.03 } }
+                        }}
+                    >
+                        <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-brand-gold text-[10px] font-semibold tracking-[0.5em] uppercase mb-3 block">{category}</motion.span>
+                        <h3 className="text-5xl font-display font-black text-marble-white mb-4 tracking-tighter leading-none flex flex-wrap gap-x-3">
+                            {title.split(" ").map((word, i) => (
+                                <motion.span key={i} className="inline-block" variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+                                    {word}
+                                </motion.span>
+                            ))}
+                        </h3>
+                        <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="flex items-center gap-4 text-white/50">
+                            <MapPin size={14} className="text-brand-gold" />
+                            <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-marble-white">{location || "Kenya"}</span>
+                        </motion.div>
+                    </motion.div>
+                </div>
+
+                {/* Tactile Tap Indicator */}
+                <div className="absolute bottom-8 right-8 w-12 h-12 rounded-full glass-card flex items-center justify-center z-30">
+                    <ArrowRight size={20} className="text-brand-off-white" />
+                </div>
+            </Link>
         </motion.div>
     );
 }
