@@ -199,29 +199,34 @@ export default function LandingPage() {
                 </motion.div>
             </section>
 
-            {/* ─── Horizontal Scroll Series (Restored Stacking Cards) ─── */}
-            <section ref={horizontalRef} id="featured" className="relative h-[600vh] bg-[hsl(var(--brand-green-light))]">
+            {/* ─── Horizontal Scroll Series (Vertical Stack on Mobile, Horizontal on Desktop) ─── */}
+            <section ref={horizontalRef} id="featured" className="relative md:h-[600vh] bg-[hsl(var(--brand-green-light))] py-20 md:py-0">
                 {/* Precision Anchor for cinematic landing */}
-                <div id="portfolio-active" className="absolute top-[120vh]" />
-                <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-                    <motion.div style={{ x, y, scale, opacity }} className="flex gap-16 md:gap-24 px-12 md:px-24 items-center will-change-transform">
+                <div id="portfolio-active" className="absolute top-0 md:top-[120vh]" />
+
+                <div className="md:sticky md:top-0 md:h-screen flex flex-col justify-center overflow-hidden">
+                    {/* Mobile: Vertical Stack / Desktop: Horizontal Scroll */}
+                    <motion.div
+                        style={{ x: typeof window !== 'undefined' && window.innerWidth >= 768 ? x : 0 }}
+                        className="flex flex-col md:flex-row gap-16 md:gap-24 px-6 md:px-24 items-center will-change-transform"
+                    >
                         {/* Intro Lead */}
                         <motion.div
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
                             variants={staggerContainer}
-                            className="flex-shrink-0 w-[420px] md:w-[600px]"
+                            className="flex-shrink-0 w-full md:w-[600px] text-center md:text-left"
                         >
                             <motion.span variants={staggerItem} className="inline-flex items-center gap-3 text-brand-gold text-[11px] font-semibold tracking-[0.6em] uppercase mb-10 glass-pill px-5 py-2">
                                 <span className="w-1 h-1 rounded-full bg-brand-gold" />
                                 Selected Series
                             </motion.span>
-                            <motion.h2 variants={staggerItem} className="text-6xl md:text-9xl font-display font-black tracking-tighter mb-10 uppercase leading-[0.85] text-foreground">
+                            <motion.h2 variants={staggerItem} className="text-5xl md:text-9xl font-display font-black tracking-tighter mb-10 uppercase leading-[0.85] text-foreground">
                                 Visual <br /> Mastery.
                             </motion.h2>
-                            <motion.div variants={staggerItem} className="flex items-center gap-8">
-                                <div className="h-px flex-1 bg-gradient-to-r from-brand-gold/40 to-transparent" />
+                            <motion.div variants={staggerItem} className="flex items-center gap-8 justify-center md:justify-start">
+                                <div className="h-px w-20 md:flex-1 bg-gradient-to-r from-brand-gold/40 to-transparent" />
                                 <p className="text-muted-foreground text-xl font-light italic font-serif">
                                     Documenting growth.
                                 </p>
@@ -234,7 +239,7 @@ export default function LandingPage() {
                         ))}
 
                         {/* End Point */}
-                        <div className="flex-shrink-0 w-[400px] flex flex-col items-center">
+                        <div className="flex-shrink-0 w-full md:w-[400px] flex flex-col items-center py-20 md:py-0">
                             <Link href="/work" className="group flex flex-col items-center text-center">
                                 <motion.div
                                     whileHover={{ scale: 1.08 }}
@@ -461,7 +466,7 @@ function HorizontalCard({ src, title, category, location, idx, scrollYProgress }
             initial={{ opacity: 0, scale: 0.94 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 1.2, delay: idx * 0.12, ease: ease }}
-            className="flex-shrink-0 w-[420px] md:w-[800px] aspect-[16/10] relative group overflow-hidden rounded-3xl shadow-[0_32px_100px_rgba(0,0,0,0.35)] border border-white/5"
+            className="flex-shrink-0 w-full md:w-[800px] aspect-[4/5] md:aspect-[16/10] relative group overflow-hidden rounded-3xl shadow-[0_32px_100px_rgba(0,0,0,0.35)] border border-white/5"
         >
             <Link href={`/work/${category.toLowerCase()}`} className="block h-full">
                 <Image
@@ -470,7 +475,7 @@ function HorizontalCard({ src, title, category, location, idx, scrollYProgress }
                     fill
                     className="object-cover transition-all duration-[2.5s] group-hover:scale-105 opacity-85 group-hover:opacity-100"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-10 md:p-14 flex flex-col justify-end">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 md:p-14 flex flex-col justify-end">
                     <motion.div
                         style={{ opacity: useTransform(scrollYProgress, [0.5, 0.8], [0, 0.5]) }}
                         className="absolute inset-0 bg-brand-green/30 blur-[160px] pointer-events-none group-hover:bg-brand-green/50 transition-colors duration-1000"
@@ -514,13 +519,13 @@ function RepositoryCard({ item, idx }: { item: any, idx: number }) {
                     <Image src={item.cover} alt={item.title} fill className="object-cover transition-all duration-[2s] opacity-85 group-hover:opacity-100 group-hover:scale-105" />
 
                     {/* Default bottom info */}
-                    <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/70 to-transparent">
+                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/70 to-transparent">
                         <span className="text-brand-gold/70 text-[10px] font-semibold tracking-[0.5em] uppercase block mb-2">{item.category}</span>
                         <h4 className="text-3xl font-display font-black text-brand-off-white tracking-tighter leading-none">{item.title}</h4>
                     </div>
 
                     {/* Hover overlay — frosted glass reveal */}
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] p-10 flex flex-col justify-end rounded-2xl">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] p-8 md:p-10 flex flex-col justify-end rounded-2xl">
                         <span className="text-brand-gold text-[11px] font-semibold tracking-[0.5em] uppercase mb-4">{item.category}</span>
                         <h4 className="text-4xl font-display font-black text-brand-off-white mb-3 tracking-tighter leading-none">{item.title}</h4>
                         <p className="text-brand-off-white/40 text-[12px] font-medium tracking-[0.2em] uppercase mb-6">{item.subtitle}</p>

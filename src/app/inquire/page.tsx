@@ -31,10 +31,10 @@ export default function InquirePage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1 }}
                 >
-                    <h1 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase leading-[0.85] mb-12 text-brand-off-white">
+                    <h1 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase leading-[0.85] mb-12 text-foreground">
                         Secure <br /> <span className="text-brand-gold/90">Your Date.</span>
                     </h1>
-                    <p className="text-brand-off-white/50 text-xl font-light leading-relaxed mb-16 max-w-md">
+                    <p className="text-muted-foreground text-xl font-light leading-relaxed mb-16 max-w-md">
                         We take on a limited number of commissions per year to ensure the highest level of stewardship for each client.
                     </p>
 
@@ -44,8 +44,8 @@ export default function InquirePage() {
                                 <Mail size={20} />
                             </div>
                             <div>
-                                <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-brand-off-white/30 mb-1">Email</span>
-                                <a href="mailto:hello@oyange.studio" className="text-xl font-display font-bold text-brand-off-white hover:text-brand-gold transition-colors">hello@oyange.studio</a>
+                                <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-muted-foreground/60 mb-1">Email</span>
+                                <a href="mailto:hello@oyange.studio" className="text-xl font-display font-bold text-foreground hover:text-brand-gold transition-colors">hello@oyange.studio</a>
                             </div>
                         </div>
 
@@ -54,8 +54,8 @@ export default function InquirePage() {
                                 <Phone size={20} />
                             </div>
                             <div>
-                                <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-brand-off-white/30 mb-1">Phone</span>
-                                <a href="tel:+254700000000" className="text-xl font-display font-bold text-brand-off-white hover:text-brand-gold transition-colors">+254 700 000 000</a>
+                                <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-muted-foreground/60 mb-1">Phone</span>
+                                <a href="tel:+254700000000" className="text-xl font-display font-bold text-foreground hover:text-brand-gold transition-colors">+254 700 000 000</a>
                             </div>
                         </div>
 
@@ -64,8 +64,8 @@ export default function InquirePage() {
                                 <MapPin size={20} />
                             </div>
                             <div>
-                                <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-brand-off-white/30 mb-1">Studio</span>
-                                <span className="text-xl font-display font-bold text-brand-off-white">Westlands, Nairobi</span>
+                                <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-muted-foreground/60 mb-1">Studio</span>
+                                <span className="text-xl font-display font-bold text-foreground">Westlands, Nairobi</span>
                             </div>
                         </div>
                     </div>
@@ -76,26 +76,26 @@ export default function InquirePage() {
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.2 }}
-                    className="glass-card p-2 md:p-4 rounded-3xl overflow-hidden min-h-[600px] shadow-[0_32px_100px_rgba(0,0,0,0.3)]"
+                    className="glass-card p-2 md:p-4 rounded-3xl overflow-hidden min-h-[600px] shadow-[0_32px_100px_rgba(0,0,0,0.08)] bg-white/50"
                 >
                     {calLink ? (
                         <iframe
-                            src={`https://cal.com/${calLink}?theme=dark`}
+                            src={`https://cal.com/${calLink}?theme=light`}
                             className="w-full h-full min-h-[580px] border-0 rounded-2xl"
                             title="Book a Session"
                         />
                     ) : (
-                        <div className="w-full h-full min-h-[580px] bg-brand-green/50 flex flex-col items-center justify-center text-center p-8 border border-white/5 rounded-2xl">
+                        <div className="w-full h-full min-h-[580px] bg-brand-green/5 flex flex-col items-center justify-center text-center p-8 border border-black/5 rounded-2xl">
                             <div className="w-20 h-20 rounded-full bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-6">
                                 <span className="font-black text-2xl">24</span>
                             </div>
-                            <h3 className="text-2xl font-display font-bold text-brand-off-white mb-2">Calendar Coming Soon</h3>
-                            <p className="text-brand-off-white/40 text-sm max-w-xs mb-8">
+                            <h3 className="text-2xl font-display font-bold text-foreground mb-2">Calendar Coming Soon</h3>
+                            <p className="text-muted-foreground text-sm max-w-xs mb-8">
                                 The live booking calendar will appear here once configured. In the meantime, reach out via email or phone.
                             </p>
                             <a
                                 href="mailto:hello@oyange.studio"
-                                className="px-8 py-4 bg-brand-gold text-brand-green font-bold text-[12px] uppercase tracking-[0.3em] rounded-full hover:bg-brand-off-white transition-all shadow-lg"
+                                className="px-8 py-4 bg-brand-gold text-brand-green font-bold text-[12px] uppercase tracking-[0.3em] rounded-full hover:bg-brand-green hover:text-brand-gold transition-all shadow-lg"
                             >
                                 Email Us Instead
                             </a>
