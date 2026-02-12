@@ -1,10 +1,9 @@
 "use client";
 
-import { motion, useScroll, useTransform, AnimatePresence, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Search } from "lucide-react";
-import { useState, useRef } from "react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 
 // ─── Animation Variants ───
 const staggerContainer = {
@@ -12,14 +11,14 @@ const staggerContainer = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.2,
+            staggerChildren: 0.08,
+            delayChildren: 0.15,
         },
     },
 };
 
 const itemAnim = {
-    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    hidden: { opacity: 0, y: 40, scale: 0.97 },
     visible: {
         opacity: 1,
         y: 0,
@@ -29,18 +28,20 @@ const itemAnim = {
 };
 
 // ─── Grid Variants ───
-type GridVariant = "editorial" | "archival" | "cinema";
+type GridVariant = "editorial" | "archival" | "cinema" | "monolithic";
 
 const gridStyles: Record<GridVariant, string> = {
-    editorial: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[400px]",
-    archival: "grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[300px]",
-    cinema: "grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-12 auto-rows-[500px]",
+    editorial: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+    archival: "grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4",
+    cinema: "grid-cols-1 md:grid-cols-2 gap-8",
+    monolithic: "grid-cols-1 gap-10",
 };
 
 const cardStyles: Record<GridVariant, string> = {
-    editorial: "rounded-[2rem]",
-    archival: "rounded-xl",
-    cinema: "rounded-sm",
+    editorial: "aspect-[4/5] rounded-2xl",
+    archival: "aspect-square rounded-xl",
+    cinema: "aspect-video h-[80vh] rounded-2xl",
+    monolithic: "aspect-[21/9] h-[90vh] rounded-3xl",
 };
 
 export default function GalleryView({ items, category, variant = "editorial" }: { items: any[], category: string, variant?: GridVariant }) {
@@ -48,83 +49,104 @@ export default function GalleryView({ items, category, variant = "editorial" }: 
     const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
     return (
-        <div className="min-h-screen bg-background text-foreground font-sans foggy-depth noise-overlay selection:bg-brand-gold selection:text-white pb-32">
+        <div className="min-h-screen bg-background text-foreground selection:bg-brand-gold selection:text-brand-green noise-overlay glass-surface pb-32">
 
             {/* Scroll Progress */}
             <motion.div
-                className="fixed top-0 left-0 right-0 h-[3px] bg-brand-gold z-[1000] origin-left"
-                style={{ scaleX }}
+                className="fixed top-0 left-0 right-0 h-[2px] z-[2000] origin-left"
+                style={{ scaleX, background: "linear-gradient(90deg, hsl(var(--brand-gold)), #ffe59e)" }}
             />
 
             {/* Navigation */}
-            <nav className="fixed top-6 left-0 right-0 z-[100] px-6 md:px-12 flex justify-between items-center pointer-events-none">
-                <Link href="/" className="pointer-events-auto w-12 h-12 rounded-full glass-card flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 group shadow-lg">
-                    <ArrowLeft size={20} className="text-foreground/60 group-hover:text-foreground transition-colors" />
-                </Link>
-                <div className="pointer-events-auto hidden md:flex items-center gap-6 px-8 py-3 glass-card rounded-full text-[10px] font-bold tracking-[0.2em] uppercase text-foreground/40 shadow-lg">
-                    <span className="text-brand-gold">{category}</span>
-                    <span>Collection</span>
-                    <span>{items.length} Works</span>
+            <nav className="fixed top-0 left-0 right-0 z-[100] px-6 md:px-12 py-8 pointer-events-none">
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
+                    <Link href="/" className="pointer-events-auto w-12 h-12 rounded-full glass-card flex items-center justify-center hover:scale-105 transition-all duration-300 group">
+                        <ArrowLeft size={20} className="text-foreground group-hover:text-brand-gold transition-colors duration-300" />
+                    </Link>
+
+                    <div className="pointer-events-auto glass-pill px-6 py-3 flex items-center gap-6">
+                        <div className="flex flex-col">
+                            <span className="text-[11px] font-semibold tracking-[0.4em] text-brand-gold uppercase leading-none mb-1">{category}</span>
+                            <span className="text-[9px] font-medium tracking-[0.2em] text-muted-foreground uppercase">{items.length} Volumes</span>
+                        </div>
+                    </div>
                 </div>
             </nav>
 
             {/* Hero Header */}
-            <header className="pt-32 pb-24 md:pt-48 px-6 md:px-12 text-center relative overflow-hidden">
+            <header className="pt-40 pb-20 md:pt-48 md:pb-28 px-6 md:px-12 relative overflow-hidden">
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                    className="max-w-7xl mx-auto text-center"
                 >
-                    <span className="text-brand-gold text-[10px] font-black tracking-[0.6em] uppercase block mb-8">Selected Works</span>
-                    <h1 className="text-6xl md:text-[8rem] font-display font-black tracking-tighter uppercase leading-none mb-6 text-foreground">
+                    <span className="inline-flex items-center gap-3 text-brand-gold/70 text-[11px] font-semibold tracking-[0.6em] uppercase mb-8 glass-pill px-5 py-2 mx-auto">
+                        <span className="w-1 h-1 rounded-full bg-brand-gold" />
+                        Archive Volume
+                    </span>
+                    <h1 className="text-6xl md:text-[clamp(5rem,12vw,14rem)] font-display font-black tracking-tighter uppercase leading-[0.8] mb-8 text-foreground">
                         {category}
                     </h1>
-                    <div className="w-24 h-1 bg-brand-gold/20 mx-auto rounded-full mt-8" />
+                    <div className="flex justify-center items-center gap-6 text-muted-foreground/30">
+                        <span className="h-px w-12 bg-gradient-to-r from-transparent to-brand-gold/30" />
+                        <span className="text-[10px] font-semibold tracking-[0.4em] uppercase">Visual Stewardship</span>
+                        <span className="h-px w-12 bg-gradient-to-l from-transparent to-brand-gold/30" />
+                    </div>
                 </motion.div>
             </header>
 
             {/* Creative Grid */}
-            <section className="px-4 md:px-12 max-w-[1800px] mx-auto">
+            <section className={`px-4 md:px-8 mx-auto pb-24 ${variant === "monolithic" ? "max-w-6xl" : "max-w-[1900px]"}`}>
                 <motion.div
                     variants={staggerContainer}
                     initial="hidden"
-                    animate="visible"
+                    whileInView="visible"
+                    viewport={{ once: true }}
                     className={`grid ${gridStyles[variant]}`}
                 >
-                    {items.map((item: any) => (
+                    {items.map((item: any, idx: number) => (
                         <motion.div
                             key={item.id}
                             variants={itemAnim}
-                            className={`group relative overflow-hidden bg-black/[0.02] cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-700 ${cardStyles[variant]} ${item.wide && variant !== "archival" ? "md:col-span-2" : "md:col-span-1"
+                            whileHover={{ y: -4, scale: 1.01 }}
+                            className={`group relative overflow-hidden cursor-pointer border border-black/5 shadow-[0_16px_60px_rgba(0,0,0,0.08)] hover:shadow-[0_24px_80px_rgba(0,0,0,0.15)] transition-all duration-700 ${cardStyles[variant]} ${variant === "editorial" && item.wide ? "md:col-span-2" :
+                                variant === "archival" && (idx % 7 === 0) ? "md:col-span-2 md:row-span-2" :
+                                    variant === "cinema" && (idx % 3 === 0) ? "md:col-span-2" :
+                                        ""
                                 }`}
                         >
                             <Image
                                 src={item.cover}
                                 alt={item.title}
                                 fill
-                                className="object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                                className="object-cover transition-all duration-[2s] opacity-90 group-hover:opacity-100 group-hover:scale-105"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
 
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
-                                <span className="text-brand-gold-light text-[9px] font-black tracking-widest uppercase mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">{item.category}</span>
-                                <h3 className="text-2xl font-bold text-white mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">{item.title}</h3>
-                                <p className="text-white/60 text-[11px] uppercase font-medium tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-150">{item.subtitle}</p>
+                            {/* Hover Overlay — Frosted Glass */}
+                            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-600 flex flex-col justify-end p-8 rounded-inherit">
+                                <div className="translate-y-6 group-hover:translate-y-0 transition-transform duration-600">
+                                    <span className="text-brand-gold/80 text-[10px] font-semibold tracking-[0.5em] uppercase mb-3 block">{item.category}</span>
+                                    <h3 className="text-3xl md:text-4xl font-display font-black text-brand-off-white mb-2 tracking-tighter leading-none">{item.title}</h3>
+                                    <p className="text-brand-off-white/35 text-[11px] font-medium tracking-[0.2em] uppercase">{item.subtitle}</p>
+                                </div>
                             </div>
 
-                            {/* Corner Icon */}
-                            <div className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                                <ArrowUpRight size={16} className="text-white" />
+                            {/* Interaction Hint */}
+                            <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full glass-card flex items-center justify-center translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                                <ArrowUpRight size={18} className="text-brand-off-white/80" />
                             </div>
                         </motion.div>
                     ))}
                 </motion.div>
             </section>
 
-            {/* Footer Hook */}
-            <div className="mt-32 text-center">
-                <Link href="/" className="inline-flex items-center gap-3 text-xs font-bold tracking-[0.2em] uppercase text-foreground/40 hover:text-brand-gold transition-colors duration-300">
-                    <ArrowLeft size={14} /> Back to Archives
+            {/* Footer */}
+            <div className="mt-16 text-center pb-16">
+                <Link href="/" className="inline-flex items-center gap-3 text-[11px] font-semibold tracking-[0.3em] uppercase text-muted-foreground hover:text-brand-gold transition-colors duration-300 group">
+                    <ArrowLeft size={14} className="group-hover:-translate-x-2 transition-transform duration-300" />
+                    Back to Archives
                 </Link>
             </div>
         </div>

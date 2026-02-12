@@ -19,9 +19,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     const items = galleries.filter(g => g.category === decodedCategory);
 
     // Determine Layout Variant
-    let variant: "editorial" | "archival" | "cinema" = "editorial";
+    let variant: "editorial" | "archival" | "cinema" | "monolithic" = "editorial";
     if (["WEDDING", "DOCUMENTARY"].includes(decodedCategory)) variant = "archival";
-    if (["ARCHITECTURAL", "WILDLIFE", "LANDSCAPE"].includes(decodedCategory)) variant = "cinema";
+    if (["WILDLIFE", "LANDSCAPE", "STREET"].includes(decodedCategory)) variant = "cinema";
+    if (["ARCHITECTURAL", "COMMERCIAL"].includes(decodedCategory)) variant = "monolithic";
 
     if (items.length === 0) {
         return notFound();

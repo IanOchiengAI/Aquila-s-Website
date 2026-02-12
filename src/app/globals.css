@@ -1,156 +1,179 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-montserrat);
   --font-serif: var(--font-playfair);
-  --font-display: var(--font-syne);
-  --color-background: #fbfbfd;
-  --color-foreground: #1d1d1f;
-  --color-brand-gold: #b58d10;
-  --color-brand-gold-light: #d4af37;
-  --color-brand-gray: #86868b;
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-border: rgba(0, 0, 0, 0.04);
+  --font-display: var(--font-montserrat);
+
+  --color-brand-green: hsl(var(--brand-green));
+  --color-brand-green-light: hsl(var(--brand-green-light));
+  --color-brand-green-bright: hsl(var(--brand-green-bright));
+  --color-brand-gold: hsl(var(--brand-gold));
+  --color-marble-white: hsl(var(--marble-white));
+  --color-brand-off-white: hsl(var(--brand-off-white));
 }
 
-/* ─── Foggy Depth Background ─── */
-.foggy-depth {
-  background:
-    radial-gradient(ellipse at 20% 0%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 100%, rgba(212, 175, 55, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, #fbfbfd 0%, #f5f5f7 100%);
+@layer base {
+  :root {
+    /* ─── Premium High-Key Palette ─── */
+    --background: 0 0% 100%;
+    /* #FFFFFF */
+    --foreground: 0 0% 10%;
+    /* #1A1A1A */
+
+    /* Deep Brand Identity (From Logo) */
+    --brand-green: 164 100% 11%;
+    /* #003829 - Forest Green */
+    --brand-green-light: 164 40% 95%;
+    --brand-green-bright: 164 100% 25%;
+    /* #005641 - Vibrant highlight */
+    --brand-green-glow: hsla(164, 100%, 25%, 0.4);
+    --brand-gold: 40 52% 54%;
+    /* #C59D4D - Rich Gold */
+    --brand-gold-glow: 37 60% 59% / 0.3;
+    --brand-off-white: 0 0% 97%;
+    --marble-white: 0 0% 92%;
+    /* Light Grey for soft contrast */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 170 50% 15%;
+    /* Teal is Primary */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 45 60% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 170 50% 15%;
+    --radius: 1rem;
+    /* Slightly tighter radius for editorial feel */
+  }
+}
+
+/* ═══════════════════════════════════════════
+   HIGH-KEY EDITORIAL DESIGN SYSTEM
+   Premium White, Clean Typography, Teal Accents
+   ═══════════════════════════════════════════ */
+
+/* ─── Ambient Surface ─── */
+.glass-surface {
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(at 10% 0%, hsla(var(--brand-gold), 0.08) 0%, transparent 50%),
+    radial-gradient(at 90% 100%, hsla(var(--brand-green), 0.05) 0%, transparent 50%);
+}
+
+/* ─── Frosted Liquid Glass Card ─── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── Subtle Noise Texture (Darkened for visibility) ─── */
+.noise-overlay {
   position: relative;
 }
 
-.foggy-depth::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
-  opacity: 0.012;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ─── Noise Texture Overlay ─── */
 .noise-overlay::after {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.04;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   pointer-events: none;
-  z-index: 1;
-  mix-blend-mode: multiply;
+  opacity: 0.04;
+  z-index: 9999;
+  filter: contrast(150%) brightness(50%);
+  /* make noise dark visible on white */
 }
 
-/* ─── Text Utilities ─── */
-.text-balance {
-  text-wrap: balance;
-}
-
-/* ─── Gold Shimmer Gradient (Animated) ─── */
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-
-  100% {
-    background-position: 200% center;
-  }
-}
-
+/* ─── Gold Shimmer ─── */
 .gold-shimmer {
-  background: linear-gradient(110deg,
-      #b58d10 0%,
-      #d4af37 25%,
-      #f0d060 50%,
-      #d4af37 75%,
-      #b58d10 100%);
+  background: linear-gradient(90deg,
+      hsl(var(--brand-gold)) 0%,
+      #d4c489 40%,
+      hsl(var(--brand-gold)) 80%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 4s ease-in-out infinite;
+  animation: shimmer 8s linear infinite;
 }
 
-/* ─── Glass Card (Premium) ─── */
-.glass-card {
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(30px) saturate(200%);
-  backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid var(--glass-border);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 4px 20px rgba(0, 0, 0, 0.01),
-    0 20px 40px rgba(0, 0, 0, 0.02);
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
 }
 
-.glass-card:hover {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 8px 30px rgba(0, 0, 0, 0.04),
-    0 30px 60px rgba(0, 0, 0, 0.04);
-}
-
-/* ─── Gold Glow Hover ─── */
+/* ─── Gold Glow (hover accent) ─── */
 .gold-glow {
-  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
 
 .gold-glow:hover {
   box-shadow:
-    0 0 30px rgba(181, 141, 16, 0.08),
-    0 0 60px rgba(181, 141, 16, 0.04),
-    0 20px 40px rgba(0, 0, 0, 0.06);
-  border-color: rgba(181, 141, 16, 0.15);
+    0 12px 32px rgba(212, 175, 55, 0.15),
+    0 4px 12px rgba(212, 175, 55, 0.1);
+  transform: translateY(-2px);
 }
 
-/* ─── Breathing Pulse (CTA) ─── */
-@keyframes breathe {
-
-  0%,
-  100% {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  }
-
-  50% {
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 0 0 4px rgba(181, 141, 16, 0.08);
-  }
+/* ─── Glass Pill (Navigation) ─── */
+.glass-pill {
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.cta-breathe {
-  animation: breathe 3s ease-in-out infinite;
+.glass-pill:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
-/* ─── Body ─── */
-body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ─── Vertical Text ─── */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
-::selection {
-  background-color: var(--color-brand-gold);
-  color: #fff;
-}
-
-/* ─── Scrollbar (Light Theme) ─── */
+/* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0f0f2;
+  background: hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c8c8cc;
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brand-gold);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Typography Helpers ─── */
+.text-balance {
+  text-wrap: balance;
 }

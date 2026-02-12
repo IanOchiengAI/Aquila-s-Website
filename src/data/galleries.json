@@ -2,8 +2,8 @@
     {
         "id": "nairobi-noir",
         "title": "Nairobi Noir",
-        "category": "DOCUMENTARY",
-        "subtitle": "Urban / Documentary",
+        "category": "EVENTS",
+        "subtitle": "Urban / Narrative",
         "cover": "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1000&q=80&auto=format",
         "date": "2025",
         "location": "Nairobi, Kenya",
@@ -13,10 +13,10 @@
         "wide": true
     },
     {
-        "id": "garden-wedding",
-        "title": "Garden Wedding",
-        "category": "WEDDING",
-        "subtitle": "Wedding / Celebration",
+        "id": "garden-union",
+        "title": "Garden Union",
+        "category": "COUPLES",
+        "subtitle": "Ceremony / Celebration",
         "cover": "https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Karen, Nairobi",
@@ -26,9 +26,9 @@
         "wide": false
     },
     {
-        "id": "street-portrait",
-        "title": "Street Portrait",
-        "category": "PORTRAIT",
+        "id": "street-persona",
+        "title": "Street Persona",
+        "category": "PORTRAITS",
         "subtitle": "Portrait / Street",
         "cover": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1000&q=80&auto=format",
         "date": "2024",
@@ -41,7 +41,7 @@
     {
         "id": "golden-savanna",
         "title": "Golden Savanna",
-        "category": "WILDLIFE",
+        "category": "ADVENTURE",
         "subtitle": "Landscape / Nature",
         "cover": "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1000&q=80&auto=format",
         "date": "2024",
@@ -54,7 +54,7 @@
     {
         "id": "haute-couture",
         "title": "Haute Couture",
-        "category": "EDITORIAL",
+        "category": "PORTRAITS",
         "subtitle": "Fashion / Editorial",
         "cover": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1000&q=80&auto=format",
         "date": "2024",
@@ -67,7 +67,7 @@
     {
         "id": "brand-launch",
         "title": "Brand Launch",
-        "category": "COMMERCIAL",
+        "category": "EVENTS",
         "subtitle": "Event / Corporate",
         "cover": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1000&q=80&auto=format",
         "date": "2024",
@@ -79,9 +79,9 @@
     },
     {
         "id": "ceremony",
-        "title": "Ceremony",
-        "category": "WEDDING",
-        "subtitle": "Wedding / Ritual",
+        "title": "The Oath",
+        "category": "COUPLES",
+        "subtitle": "Ritual / Vows",
         "cover": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Windsor",
@@ -93,7 +93,7 @@
     {
         "id": "nairobi-skyline",
         "title": "Nairobi Skyline",
-        "category": "ARCHITECTURAL",
+        "category": "PRODUCT",
         "subtitle": "Urban / Landscape",
         "cover": "https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=1000&q=80&auto=format",
         "date": "2024",
@@ -104,22 +104,22 @@
         "wide": false
     },
     {
-        "id": "editorial",
+        "id": "editorial-shoot",
         "title": "Editorial",
-        "category": "EDITORIAL",
-        "subtitle": "Fashion / Arts",
+        "category": "GRADUATION",
+        "subtitle": "Achievement / Portrait",
         "cover": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=80&auto=format",
         "date": "2024",
-        "location": "Location",
+        "location": "University",
         "services": "Photography",
-        "description": "Outdoor fashion editorial.",
+        "description": "Celebrating milestones and achievements.",
         "content": [],
         "wide": true
     },
     {
         "id": "corporate-headshot",
-        "title": "Corporate Headshot",
-        "category": "COMMERCIAL",
+        "title": "Executive",
+        "category": "EVENTS",
         "subtitle": "Portrait / Corporate",
         "cover": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000&q=80&auto=format",
         "date": "2024",
@@ -132,7 +132,7 @@
     {
         "id": "natural-light",
         "title": "Natural Light",
-        "category": "PORTRAIT",
+        "category": "PORTRAITS",
         "subtitle": "Portrait / Natural",
         "cover": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1000&q=80&auto=format",
         "date": "2024",
@@ -145,8 +145,8 @@
     {
         "id": "first-dance",
         "title": "First Dance",
-        "category": "WEDDING",
-        "subtitle": "Wedding / Party",
+        "category": "COUPLES",
+        "subtitle": "Party / Celebration",
         "cover": "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1000&q=80&auto=format",
         "date": "2024",
         "location": "Naivasha",
@@ -154,5 +154,18 @@
         "description": "The first dance moment.",
         "content": [],
         "wide": false
+    },
+    {
+        "id": "nordic-expedition",
+        "title": "Nordic Edge",
+        "category": "ADVENTURE",
+        "subtitle": "Travel / Landscape",
+        "cover": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1000&q=80&auto=format",
+        "date": "2023",
+        "location": "Iceland",
+        "services": "Travel Photography",
+        "description": "Exploring the raw landscapes of the north.",
+        "content": [],
+        "wide": true
     }
 ]
