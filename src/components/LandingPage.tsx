@@ -399,7 +399,7 @@ export default function LandingPage() {
                                 <Link href="https://instagram.com/oyange_" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">Instagram</Link>
                                 <Link href="https://www.tiktok.com/@0yange_" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">TikTok</Link>
                                 <Link href="https://www.linkedin.com/in/oyange-aquila/" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">LinkedIn</Link>
-                                <Link href="https://wa.me/254700000000" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">WhatsApp</Link>
+                                <Link href="https://wa.me/254717393576" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">WhatsApp</Link>
                             </div>
                         </div>
                     </div>
@@ -484,10 +484,6 @@ function HorizontalCard({ src, title, category, location, idx, scrollYProgress }
                     <LightboxTrigger src={src} title={title} category={category} />
                 </div>
 
-                {/* Hover Indicator */}
-                <div className="absolute top-6 right-6 w-12 h-12 rounded-full glass-card flex items-center justify-center opacity-0 group-hover:opacity-100 backdrop-blur-2xl bg-white/20 transition-all duration-500 translate-y-3 group-hover:translate-y-0 shadow-lg">
-                    <ArrowRight size={20} className="text-brand-off-white" />
-                </div>
             </Link>
         </motion.div>
     );
