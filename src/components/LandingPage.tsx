@@ -390,7 +390,7 @@ export default function LandingPage() {
                                 <Link href="/" className="text-sm text-muted-foreground hover:text-black transition-colors">Home</Link>
                                 <Link href="/about" className="text-sm text-muted-foreground hover:text-black transition-colors">About</Link>
                                 <Link href="/work" className="text-sm text-muted-foreground hover:text-black transition-colors">Portfolio</Link>
-                                <Link href="/investment" className="text-sm text-muted-foreground hover:text-black transition-colors">Investment</Link>
+                                <Link href="/inquire" className="text-sm text-muted-foreground hover:text-black transition-colors">Inquire</Link>
                             </div>
                         </div>
                         <div className="flex flex-col gap-6">

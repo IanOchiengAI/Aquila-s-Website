@@ -55,7 +55,7 @@ export default function InquirePage() {
                             </div>
                             <div>
                                 <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-brand-gold mb-1">Phone</span>
-                                <a href="tel:+254700000000" className="text-xl font-display font-bold text-brand-green hover:text-brand-gold transition-colors">+254 700 000 000</a>
+                                <a href="tel:+254717393576" className="text-xl font-display font-bold text-brand-green hover:text-brand-gold transition-colors">+254 717 393 576</a>
                             </div>
                         </div>
 
@@ -87,18 +87,28 @@ export default function InquirePage() {
                     ) : (
                         <div className="w-full h-full min-h-[430px] bg-brand-green/5 flex flex-col items-center justify-center text-center p-8 border border-black/5 rounded-2xl">
                             <div className="w-20 h-20 rounded-full bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-6">
-                                <span className="font-black text-2xl">24</span>
+                                <Phone size={32} />
                             </div>
-                            <h3 className="text-2xl font-display font-bold text-foreground mb-2">Calendar Coming Soon</h3>
+                            <h3 className="text-2xl font-display font-bold text-foreground mb-2">Book Your Session</h3>
                             <p className="text-muted-foreground text-sm max-w-xs mb-8">
-                                The live booking calendar will appear here once configured. In the meantime, reach out via email or phone.
+                                Reach out via WhatsApp or email to secure your date. We respond within 24 hours.
                             </p>
-                            <a
-                                href="mailto:hello@oyange.studio"
-                                className="px-8 py-4 bg-brand-gold text-brand-green font-bold text-[12px] uppercase tracking-[0.3em] rounded-full hover:bg-brand-green hover:text-brand-gold transition-all shadow-lg"
-                            >
-                                Email Us Instead
-                            </a>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <a
+                                    href="https://wa.me/254717393576?text=Hi%20Oyange%2C%20I%27d%20like%20to%20book%20a%20session!"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-8 py-4 bg-brand-green text-brand-off-white font-bold text-[12px] uppercase tracking-[0.3em] rounded-full hover:bg-brand-gold hover:text-brand-green transition-all shadow-lg"
+                                >
+                                    WhatsApp Us
+                                </a>
+                                <a
+                                    href="mailto:hello@oyange.studio"
+                                    className="px-8 py-4 bg-brand-gold text-brand-green font-bold text-[12px] uppercase tracking-[0.3em] rounded-full hover:bg-brand-green hover:text-brand-gold transition-all shadow-lg"
+                                >
+                                    Email Us
+                                </a>
+                            </div>
                         </div>
                     )}
                 </motion.div>
