@@ -3,7 +3,9 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { GalleryItem } from "@/sanity/lib/queries";
+import { useLightbox, LightboxTrigger } from "./Lightbox";
 
 // ─── Animation Variants ───
 const staggerContainer = {
@@ -44,9 +46,10 @@ const cardStyles: Record<GridVariant, string> = {
     monolithic: "aspect-[21/9] h-[90vh] rounded-3xl",
 };
 
-export default function GalleryView({ items, category, variant = "editorial" }: { items: any[], category: string, variant?: GridVariant }) {
+export default function GalleryView({ items, category, variant = "editorial" }: { items: GalleryItem[], category: string, variant?: GridVariant }) {
     const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+    const scaleX = useSpring(scrollYProgress, { stiffness: 60, damping: 30, restDelta: 0.001 });
+    const { openLightbox } = useLightbox();
 
     return (
         <div className="min-h-screen bg-background text-foreground selection:bg-brand-gold selection:text-brand-green noise-overlay glass-surface pb-32">
@@ -105,11 +108,12 @@ export default function GalleryView({ items, category, variant = "editorial" }: 
                     viewport={{ once: true }}
                     className={`grid ${gridStyles[variant]}`}
                 >
-                    {items.map((item: any, idx: number) => (
+                    {items.map((item: GalleryItem, idx: number) => (
                         <motion.div
                             key={item.id}
                             variants={itemAnim}
                             whileHover={{ y: -4, scale: 1.01 }}
+                            onClick={() => openLightbox(item.cover, item.title, item.category)}
                             className={`group relative overflow-hidden cursor-pointer border border-black/5 shadow-[0_16px_60px_rgba(0,0,0,0.08)] hover:shadow-[0_24px_80px_rgba(0,0,0,0.15)] transition-all duration-700 ${cardStyles[variant]} ${variant === "editorial" && item.wide ? "md:col-span-2" :
                                 variant === "archival" && (idx % 7 === 0) ? "md:col-span-2 md:row-span-2" :
                                     variant === "cinema" && (idx % 3 === 0) ? "md:col-span-2" :
@@ -134,8 +138,8 @@ export default function GalleryView({ items, category, variant = "editorial" }: 
                             </div>
 
                             {/* Interaction Hint */}
-                            <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full glass-card flex items-center justify-center translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                                <ArrowUpRight size={18} className="text-brand-off-white/80" />
+                            <div className="absolute bottom-6 right-6 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 translate-y-4 group-hover:translate-y-0">
+                                <LightboxTrigger src={item.cover} title={item.title} category={item.category} />
                             </div>
                         </motion.div>
                     ))}

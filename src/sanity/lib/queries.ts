@@ -6,9 +6,29 @@ import galleriesJson from "@/data/galleries.json";
  * Falls back to local galleries.json if Sanity is not configured.
  * This ensures the site always works, even without a CMS.
  */
-export async function getGalleries() {
+export interface GalleryItem {
+    id: string;
+    title: string;
+    category: string;
+    subtitle: string;
+    cover: string;
+    date?: string;
+    location?: string;
+    services?: string | string[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    description?: any;
+    content?: string[];
+    wide?: boolean;
+}
+
+/**
+ * Fetches galleries from Sanity CMS.
+ * Falls back to local galleries.json if Sanity is not configured.
+ * This ensures the site always works, even without a CMS.
+ */
+export async function getGalleries(): Promise<GalleryItem[]> {
     if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
-        return galleriesJson;
+        return galleriesJson as GalleryItem[];
     }
 
     try {
@@ -28,10 +48,10 @@ export async function getGalleries() {
       }
     `);
 
-        return galleries.length > 0 ? galleries : galleriesJson;
+        return galleries.length > 0 ? galleries : galleriesJson as GalleryItem[];
     } catch {
         // If Sanity fetch fails, fall back to local JSON
-        return galleriesJson;
+        return galleriesJson as GalleryItem[];
     }
 }
 
@@ -41,7 +61,7 @@ export async function getGalleries() {
 export async function getGalleriesByCategory(category: string) {
     const all = await getGalleries();
     return all.filter(
-        (g: any) => g.category?.toLowerCase() === category.toLowerCase()
+        (g: GalleryItem) => g.category?.toLowerCase() === category.toLowerCase()
     );
 }
 

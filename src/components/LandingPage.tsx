@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, ReactNode } from "react";
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, useInView, AnimatePresence, MotionValue } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, MapPin, Calendar } from "lucide-react";
 import galleries from "@/data/galleries.json";
+import Navbar from "./Navbar";
+import { LightboxTrigger } from "./Lightbox";
 
 const heroImages = [
     "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80&auto=format",
@@ -14,6 +16,13 @@ const heroImages = [
     "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=1600&q=80&auto=format",
     "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80&auto=format"
 ];
+
+interface RepositoryItem {
+    title: string;
+    category: string;
+    cover: string;
+    subtitle: string;
+}
 
 // ─── Animation Curves & Variants ───
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -68,12 +77,14 @@ export default function LandingPage() {
     // Slide distance adjusted for a more cinematic exit
     const baseTranslateX = useTransform(scrollYProgress, [0.18, 0.9], ["0%", "-115%"]);
 
-    const x = useSpring(baseTranslateX, { stiffness: 100, damping: 30 });
+    const x = useSpring(baseTranslateX, { stiffness: 50, damping: 40, restDelta: 0.001 });
 
-    // Hero Parallax
+    // Hero Parallax — spring-smoothed for zero jerkiness
     const { scrollY } = useScroll();
-    const heroTextY = useTransform(scrollY, [0, 600], [0, 100]);
-    const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+    const rawHeroTextY = useTransform(scrollY, [0, 600], [0, 100]);
+    const rawHeroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+    const heroTextY = useSpring(rawHeroTextY, { stiffness: 60, damping: 30, restDelta: 0.001 });
+    const heroOpacity = useSpring(rawHeroOpacity, { stiffness: 60, damping: 30, restDelta: 0.001 });
 
     const categories = ["ALL", "PORTRAITS", "COUPLES", "ADVENTURE", "EVENTS", "GRADUATION", "PRODUCT"];
     const featuredSeries = galleries.slice(0, 5); // Using individual photos again
@@ -84,30 +95,7 @@ export default function LandingPage() {
             <ScrollProgress />
 
             {/* ─── Navigation ─── */}
-            <nav className="fixed top-0 left-0 right-0 z-[120] pointer-events-none px-6 md:px-12 py-8">
-                <div className="max-w-7xl mx-auto flex justify-between items-center pointer-events-auto">
-                    {/* Brand Logo */}
-                    <Link href="/" className="group flex flex-col">
-                        <span className="font-display text-3xl font-black tracking-tighter text-foreground leading-none group-hover:text-brand-gold transition-colors duration-500">OYANGE</span>
-                        <span className="text-[9px] font-semibold tracking-[0.5em] uppercase text-muted-foreground/60">Visual Alchemy</span>
-                    </Link>
-
-                    {/* Desktop Menu — Frosted Liquid Glass Pill */}
-                    <div className="hidden lg:flex items-center gap-8 glass-pill px-10 py-4 backdrop-blur-3xl bg-white/40">
-                        <Link href="/work/portraits" className="text-[10px] font-semibold tracking-[0.2em] uppercase text-muted-foreground hover:text-brand-gold transition-all duration-300">Portraits</Link>
-                        <Link href="/work/couples" className="text-[10px] font-semibold tracking-[0.2em] uppercase text-muted-foreground hover:text-brand-gold transition-all duration-300">Couples</Link>
-                        <Link href="/work/adventure" className="text-[10px] font-semibold tracking-[0.2em] uppercase text-muted-foreground hover:text-brand-gold transition-all duration-300">Adventure</Link>
-                        <Link href="/work/events" className="text-[10px] font-semibold tracking-[0.2em] uppercase text-muted-foreground hover:text-brand-gold transition-all duration-300">Events</Link>
-                        <Link href="/work/graduation" className="text-[10px] font-semibold tracking-[0.2em] uppercase text-muted-foreground hover:text-brand-gold transition-all duration-300">Graduation</Link>
-                        <Link href="/work/product" className="text-[10px] font-semibold tracking-[0.2em] uppercase text-muted-foreground hover:text-brand-gold transition-all duration-300">Product</Link>
-                    </div>
-
-                    {/* Contact Button — Deep Forest & Gold */}
-                    <Link href="/inquire" className="px-8 py-3.5 bg-brand-green text-brand-gold font-bold text-[11px] uppercase tracking-[0.3em] rounded-full hover:bg-brand-green-bright transition-all duration-300 shadow-[0_8px_32px_hsla(164,100%,11%,0.4)] border border-brand-gold/20">
-                        Inquire
-                    </Link>
-                </div>
-            </nav>
+            <Navbar />
 
             {/* ─── Hero Section ─── */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden bg-white">
@@ -127,6 +115,7 @@ export default function LandingPage() {
                                 fill
                                 className="object-cover"
                                 priority
+                                sizes="100vw"
                             />
                         </motion.div>
                     </AnimatePresence>
@@ -256,7 +245,7 @@ export default function LandingPage() {
                     >
                         <Image
                             src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1000&q=80&auto=format"
-                            alt="Aquila Oyange Portrait"
+                            alt="Oyange Portrait"
                             width={600}
                             height={900}
                             className="rounded-3xl object-cover aspect-[3/4] shadow-[0_32px_100px_rgba(0,0,0,0.1)] border border-black/5"
@@ -276,7 +265,7 @@ export default function LandingPage() {
                             </h3>
                             <div className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed space-y-6 max-w-xl">
                                 <p>
-                                    My name is <span className="font-semibold text-foreground">Aquila Oyange</span>. I am a Creative Visionary with a passion for driving tangible impact.
+                                    My name is <span className="font-semibold text-foreground">Oyange</span>. I am a Creative Visionary with a passion for driving tangible impact.
                                 </p>
                                 <p>
                                     Currently, I am pursuing photography (portrait, event, travel). I am driven by Impact Storytelling, viewing every development process as a chance to document and share a narrative of measurable growth.
@@ -409,7 +398,7 @@ export default function LandingPage() {
                             <div className="flex flex-col gap-3">
                                 <Link href="https://instagram.com/oyange_" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">Instagram</Link>
                                 <Link href="https://tiktok.com/@oyange_" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">TikTok</Link>
-                                <Link href="https://linkedin.com/in/oyange-aquila" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">LinkedIn</Link>
+                                <Link href="https://linkedin.com/in/oyange" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">LinkedIn</Link>
                                 <Link href="https://wa.me/254700000000" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">WhatsApp</Link>
                             </div>
                         </div>
@@ -446,7 +435,7 @@ export default function LandingPage() {
 }
 
 // ─── Glass Horizontal Card ───
-function HorizontalCard({ src, title, category, location, idx, scrollYProgress }: { src: string, title: string, category: string, location: string, idx: number, scrollYProgress: any }) {
+function HorizontalCard({ src, title, category, location, idx, scrollYProgress }: { src: string, title: string, category: string, location: string, idx: number, scrollYProgress: MotionValue<number> }) {
     const cardRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(cardRef, { once: true, amount: 0.3 });
 
@@ -464,6 +453,7 @@ function HorizontalCard({ src, title, category, location, idx, scrollYProgress }
                     alt={title}
                     fill
                     className="object-cover transition-all duration-[2.5s] group-hover:scale-105 opacity-85 group-hover:opacity-100"
+                    sizes="(max-width: 768px) 100vw, 800px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 md:p-14 flex flex-col justify-end">
                     <motion.div
@@ -482,6 +472,11 @@ function HorizontalCard({ src, title, category, location, idx, scrollYProgress }
                     </div>
                 </div>
 
+                {/* Lightbox Trigger */}
+                <div className="absolute top-6 right-6 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                    <LightboxTrigger src={src} title={title} category={category} />
+                </div>
+
                 {/* Hover Indicator */}
                 <div className="absolute top-6 right-6 w-12 h-12 rounded-full glass-card flex items-center justify-center opacity-0 group-hover:opacity-100 backdrop-blur-2xl bg-white/20 transition-all duration-500 translate-y-3 group-hover:translate-y-0 shadow-lg">
                     <ArrowRight size={20} className="text-brand-off-white" />
@@ -492,7 +487,7 @@ function HorizontalCard({ src, title, category, location, idx, scrollYProgress }
 }
 
 // ─── Glass Repository Card ───
-function RepositoryCard({ item, idx }: { item: any, idx: number }) {
+function RepositoryCard({ item, idx }: { item: RepositoryItem, idx: number }) {
     return (
         <motion.div
             layout
@@ -506,7 +501,13 @@ function RepositoryCard({ item, idx }: { item: any, idx: number }) {
                     whileHover={{ y: -8 }}
                     className="group relative aspect-[3/4] overflow-hidden rounded-2xl border border-white/5 shadow-[0_16px_60px_rgba(0,0,0,0.25)] hover:shadow-[0_24px_80px_rgba(0,0,0,0.4)] transition-all duration-700 cursor-pointer"
                 >
-                    <Image src={item.cover} alt={item.title} fill className="object-cover transition-all duration-[2s] opacity-85 group-hover:opacity-100 group-hover:scale-105" />
+                    <Image
+                        src={item.cover}
+                        alt={item.title}
+                        fill
+                        className="object-cover transition-all duration-[2s] opacity-85 group-hover:opacity-100 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
 
                     {/* Default bottom info */}
                     <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/70 to-transparent">
@@ -515,7 +516,11 @@ function RepositoryCard({ item, idx }: { item: any, idx: number }) {
                     </div>
 
                     {/* Hover overlay — frosted glass reveal */}
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] p-8 md:p-10 flex flex-col justify-end rounded-2xl">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] p-8 md:p-10 flex flex-col justify-end rounded-2xl z-20">
+                        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                            <LightboxTrigger src={item.cover} title={item.title} category={item.category} />
+                        </div>
+
                         <span className="text-brand-gold text-[11px] font-semibold tracking-[0.5em] uppercase mb-4">{item.category}</span>
                         <h4 className="text-4xl font-display font-black text-brand-off-white mb-3 tracking-tighter leading-none">{item.title}</h4>
                         <p className="text-brand-off-white/40 text-[12px] font-medium tracking-[0.2em] uppercase mb-6">{item.subtitle}</p>
@@ -546,23 +551,110 @@ function RevealSection({ children, className = "" }: { children: ReactNode, clas
     );
 }
 
-// ─── Investment Card ───
-function InvestmentCard({ title, price, features, idx }: { title: string, price: string, features: string[], idx: number }) {
+// ─── Investment Card (Interactive Glass + Mouse Tracking Glow) ───
+function InvestmentCard({ title, price, features, idx }: { title: string, price: string, features: string[], idx?: number }) {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const mouseX = useMotionValue(0.5);
+    const mouseY = useMotionValue(0.5);
+
+    // Spring-smoothed 3D tilt
+    const rawRotateY = useTransform(mouseX, [0, 1], [-6, 6]);
+    const rawRotateX = useTransform(mouseY, [0, 1], [6, -6]);
+    const rotateX = useSpring(rawRotateX, { stiffness: 150, damping: 20 });
+    const rotateY = useSpring(rawRotateY, { stiffness: 150, damping: 20 });
+
+    // Mouse-tracking glow position
+    const glowX = useSpring(mouseX, { stiffness: 150, damping: 20 });
+    const glowY = useSpring(mouseY, { stiffness: 150, damping: 20 });
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!cardRef.current) return;
+        const rect = cardRef.current.getBoundingClientRect();
+        mouseX.set((e.clientX - rect.left) / rect.width);
+        mouseY.set((e.clientY - rect.top) / rect.height);
+    };
+
+    const handleMouseLeave = () => {
+        mouseX.set(0.5);
+        mouseY.set(0.5);
+    };
+
     return (
         <motion.div
+            ref={cardRef}
             variants={staggerItem}
-            className="group p-10 bg-white border border-black/5 rounded-3xl hover:border-brand-green-bright/30 transition-all duration-700 shadow-[0_8px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_32px_80px_rgba(26,140,123,0.15)]"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                rotateX,
+                rotateY,
+                transformPerspective: 800,
+                transformStyle: "preserve-3d",
+            }}
+            className="group relative p-10 rounded-3xl transition-colors duration-700 overflow-hidden cursor-default will-change-transform"
         >
-            <h3 className="text-2xl font-serif italic mb-2 text-brand-gold">{title}</h3>
-            <span className="text-4xl font-black tracking-tighter text-foreground mb-8 block uppercase">{price}</span>
-            <ul className="space-y-4">
-                {features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm text-muted-foreground font-medium uppercase tracking-widest leading-none">
-                        <span className="w-1 h-1 rounded-full bg-brand-gold/50" />
-                        {f}
-                    </li>
-                ))}
-            </ul>
+            {/* Base background */}
+            <div
+                className="absolute inset-0 rounded-3xl"
+                style={{ background: "linear-gradient(145deg, hsl(164 100% 11%) 0%, hsl(164 80% 6%) 100%)" }}
+            />
+
+            {/* Mouse-tracking radial glow */}
+            <motion.div
+                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                    background: useMotionTemplate`radial-gradient(600px circle at ${useTransform(glowX, v => `${v * 100}%`)} ${useTransform(glowY, v => `${v * 100}%`)}, rgba(197, 157, 77, 0.12), transparent 60%)`,
+                }}
+            />
+
+            {/* Frosted glass border — gives the glass-card feel */}
+            <div
+                className="absolute inset-0 rounded-3xl pointer-events-none transition-all duration-700"
+                style={{
+                    border: "1px solid rgba(197, 157, 77, 0.12)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 16px 48px rgba(0,0,0,0.25)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                }}
+            />
+
+            {/* Hover glow border */}
+            <div className="absolute inset-0 rounded-3xl border border-transparent group-hover:border-brand-gold/25 transition-colors duration-700 pointer-events-none" />
+
+            {/* Decorative corner flourish */}
+            <div className="absolute top-0 right-0 w-32 h-32 opacity-10 group-hover:opacity-25 transition-opacity duration-700">
+                <div className="absolute top-6 right-6 w-16 h-[1px] bg-brand-gold" />
+                <div className="absolute top-6 right-6 w-[1px] h-16 bg-brand-gold" />
+            </div>
+
+            {/* Bottom-left corner flourish (mirror) */}
+            <div className="absolute bottom-0 left-0 w-24 h-24 opacity-0 group-hover:opacity-15 transition-opacity duration-700">
+                <div className="absolute bottom-6 left-6 w-12 h-[1px] bg-brand-gold" />
+                <div className="absolute bottom-6 left-6 w-[1px] h-12 bg-brand-gold" />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10" style={{ transform: "translateZ(20px)" }}>
+                <span className="text-brand-gold text-[10px] font-semibold tracking-[0.5em] uppercase block mb-3">
+                    {idx === 0 ? "Adventure" : idx === 1 ? "Portrait" : "Coverage"}
+                </span>
+                <h3 className="text-3xl font-display font-black text-white mb-2 tracking-tight">{title}</h3>
+                <span className="text-3xl font-display font-black tracking-tight text-brand-gold block mb-8">{price}</span>
+
+                {/* Gold rule */}
+                <div className="w-12 h-[1px] bg-brand-gold/40 group-hover:w-20 transition-all duration-700 mb-8" />
+
+                <ul className="space-y-4">
+                    {features.map((f, i) => (
+                        <li key={i} className="flex items-center gap-3 text-sm text-white/60 group-hover:text-white/80 font-medium tracking-wide transition-colors duration-500">
+                            <svg className="w-4 h-4 text-brand-gold shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            {f}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </motion.div>
     );
 }
@@ -580,9 +672,9 @@ function BackToTop() {
         <motion.button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.8 }}
-            className="fixed bottom-10 right-32 z-[150] w-14 h-14 bg-white/30 backdrop-blur-3xl text-brand-green rounded-full flex items-center justify-center border border-white/40 shadow-xl hover:bg-white/50 transition-all duration-300"
+            className="fixed bottom-8 left-8 z-[150] w-12 h-12 bg-white/20 backdrop-blur-3xl text-brand-green rounded-full flex items-center justify-center border border-white/30 shadow-xl hover:bg-white/50 transition-all duration-300"
         >
-            <ArrowRight size={24} className="-rotate-90" />
+            <ArrowRight size={20} className="-rotate-90" />
         </motion.button>
     );
 }
@@ -590,7 +682,7 @@ function BackToTop() {
 // ─── Scroll Progress Bar ───
 function ScrollProgress() {
     const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+    const scaleX = useSpring(scrollYProgress, { stiffness: 60, damping: 30, restDelta: 0.001 });
     return (
         <motion.div
             className="fixed top-0 left-0 right-0 h-[2px] z-[2000] origin-left"
@@ -630,21 +722,28 @@ function CustomCursor() {
 }
 
 // ─── Mobile Parallax Card (Scroll-Driven 3D Tilt) ───
-function MobileParallaxCard({ src, title, category, location, idx }: { src: string, title: string, category: string, location: string, idx: number }) {
+function MobileParallaxCard({ src, title, category, location }: { src: string, title: string, category: string, location: string, idx?: number }) {
     const cardRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: cardRef,
         offset: ["start end", "end start"]
     });
 
-    // 3D Tilt Effect based on scroll position
-    const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [15, 0, -15]);
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 0.9]);
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+    // 3D Tilt — noticeable but smooth
+    const rawRotateX = useTransform(scrollYProgress, [0, 0.5, 1], [8, 0, -8]);
+    const rawScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.92, 1, 0.92]);
+    const rawOpacity = useTransform(scrollYProgress, [0, 0.25, 0.85, 1], [0, 1, 1, 0]);
 
-    // Glare/Shine Effect moving across the card
+    // Ultra-smooth springs
+    const springConfig = { stiffness: 40, damping: 40, restDelta: 0.001 };
+    const rotateX = useSpring(rawRotateX, springConfig);
+    const scale = useSpring(rawScale, springConfig);
+    const opacity = useSpring(rawOpacity, springConfig);
+
+    // Glare/Shine Effect
     const shineX = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-    const shineOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.4, 0]);
+    const rawShineOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.3, 0]);
+    const shineOpacity = useSpring(rawShineOpacity, springConfig);
 
     return (
         <motion.div
@@ -653,9 +752,9 @@ function MobileParallaxCard({ src, title, category, location, idx }: { src: stri
                 rotateX,
                 scale,
                 opacity,
-                transformPerspective: 800
+                transformPerspective: 1200
             }}
-            className="w-full aspect-[4/5] relative group overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-white/5 mb-16 last:mb-0"
+            className="w-full aspect-[4/5] relative group overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-white/5 mb-16 last:mb-0 will-change-transform"
         >
             <Link href={`/work/${category.toLowerCase()}`} className="block h-full">
                 <motion.div
@@ -667,6 +766,7 @@ function MobileParallaxCard({ src, title, category, location, idx }: { src: stri
                         alt={title}
                         fill
                         className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                     />
                 </motion.div>
 
@@ -690,7 +790,7 @@ function MobileParallaxCard({ src, title, category, location, idx }: { src: stri
                         }}
                     >
                         <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-brand-gold text-[10px] font-semibold tracking-[0.5em] uppercase mb-3 block">{category}</motion.span>
-                        <h3 className="text-5xl font-display font-black text-marble-white mb-4 tracking-tighter leading-none flex flex-wrap gap-x-3">
+                        <h3 className="text-4xl md:text-5xl font-display font-black text-marble-white mb-4 tracking-tighter leading-none flex flex-wrap gap-x-3">
                             {title.split(" ").map((word, i) => (
                                 <motion.span key={i} className="inline-block" variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
                                     {word}
@@ -705,8 +805,8 @@ function MobileParallaxCard({ src, title, category, location, idx }: { src: stri
                 </div>
 
                 {/* Tactile Tap Indicator */}
-                <div className="absolute bottom-8 right-8 w-12 h-12 rounded-full glass-card flex items-center justify-center z-30">
-                    <ArrowRight size={20} className="text-brand-off-white" />
+                <div className="absolute bottom-6 right-6 flex items-center gap-3 z-30">
+                    <LightboxTrigger src={src} title={title} category={category} className="w-10 h-10" />
                 </div>
             </Link>
         </motion.div>
