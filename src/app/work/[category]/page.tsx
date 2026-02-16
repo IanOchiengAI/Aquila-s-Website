@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
-import galleries from "@/data/galleries.json";
 import GalleryView from "@/components/GalleryView";
+import { getGalleries, getGalleriesByCategory } from "@/sanity/lib/queries";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+    const galleries = await getGalleries();
     const categories = Array.from(new Set(galleries.map((g) => g.category)));
     return categories.map((category) => ({
         category: category.toLowerCase(),
@@ -15,8 +16,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     // Handle case-insensitivity: URL is lowercase, data is uppercase
     const decodedCategory = decodeURIComponent(category).toUpperCase();
 
-    // Filter items
-    const items = galleries.filter(g => g.category === decodedCategory);
+    // Filter items using Sanity
+    const items = await getGalleriesByCategory(decodedCategory);
 
     // Determine Layout Variant
     let variant: "editorial" | "archival" | "cinema" | "monolithic" = "editorial";
@@ -24,7 +25,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     if (["WILDLIFE", "LANDSCAPE", "STREET"].includes(decodedCategory)) variant = "cinema";
     if (["ARCHITECTURAL", "COMMERCIAL"].includes(decodedCategory)) variant = "monolithic";
 
-    if (items.length === 0) {
+    if (!items || items.length === 0) {
         return notFound();
     }
 

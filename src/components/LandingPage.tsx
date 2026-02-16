@@ -5,7 +5,8 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTe
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, MapPin, Calendar } from "lucide-react";
-import galleries from "@/data/galleries.json";
+import galleriesInternal from "@/data/galleries.json";
+import { getGalleries, GalleryItem } from "@/sanity/lib/queries";
 import Navbar from "./Navbar";
 import { LightboxTrigger } from "./Lightbox";
 
@@ -59,6 +60,16 @@ const staggerItem = {
 // ─── Main Component ───
 export default function LandingPage() {
     const [heroIdx, setHeroIdx] = useState(0);
+    const [galleries, setGalleries] = useState<GalleryItem[]>(galleriesInternal as GalleryItem[]);
+
+    useEffect(() => {
+        // Fetch galleries from Sanity on mount
+        getGalleries().then(data => {
+            if (data && data.length > 0) {
+                setGalleries(data);
+            }
+        });
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -74,8 +85,8 @@ export default function LandingPage() {
         offset: ["start start", "end end"]
     });
 
-    // Slide distance adjusted for a more cinematic exit
-    const baseTranslateX = useTransform(scrollYProgress, [0.18, 0.9], ["0%", "-115%"]);
+    // Slide distance — starts almost immediately on scroll entry
+    const baseTranslateX = useTransform(scrollYProgress, [0.05, 0.85], ["0%", "-115%"]);
 
     const x = useSpring(baseTranslateX, { stiffness: 50, damping: 40, restDelta: 0.001 });
 
@@ -171,7 +182,7 @@ export default function LandingPage() {
             </section>
 
             {/* ─── Horizontal Scroll Series (Vertical Stack on Mobile, Horizontal on Desktop) ─── */}
-            <section ref={horizontalRef} id="featured" className="relative md:h-[600vh] bg-[hsl(var(--brand-green-light))] py-20 md:py-0">
+            <section ref={horizontalRef} id="featured" className="relative md:h-[400vh] bg-[hsl(var(--brand-green-light))] py-20 md:py-0">
                 {/* Precision Anchor for cinematic landing */}
                 <div id="portfolio-active" className="absolute top-0 md:top-[120vh]" />
 
@@ -441,7 +452,7 @@ export default function LandingPage() {
 }
 
 // ─── Glass Horizontal Card ───
-function HorizontalCard({ src, title, category, location, idx, scrollYProgress }: { src: string, title: string, category: string, location: string, idx: number, scrollYProgress: MotionValue<number> }) {
+function HorizontalCard({ src, title, category, location, idx, scrollYProgress }: { src: string, title: string, category: string, location?: string, idx: number, scrollYProgress: MotionValue<number> }) {
     const cardRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(cardRef, { once: true, amount: 0.3 });
 
@@ -471,7 +482,7 @@ function HorizontalCard({ src, title, category, location, idx, scrollYProgress }
                         <h3 className="text-4xl md:text-7xl font-display font-black text-marble-white group-hover:text-brand-green-bright transition-colors duration-700 mb-4 tracking-tighter leading-none">{title}</h3>
                         <div className="flex items-center gap-4 text-white/50">
                             <MapPin size={14} className="text-brand-gold" />
-                            <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-marble-white">{location}</span>
+                            <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-marble-white">{location || "Kenya"}</span>
                             <div className="h-px w-8 bg-brand-gold/30" />
                             <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-brand-gold/40">{String(idx + 1).padStart(2, '0')}</span>
                         </div>
@@ -724,7 +735,7 @@ function CustomCursor() {
 }
 
 // ─── Mobile Parallax Card (Scroll-Driven 3D Tilt) ───
-function MobileParallaxCard({ src, title, category, location }: { src: string, title: string, category: string, location: string, idx?: number }) {
+function MobileParallaxCard({ src, title, category, location, idx }: { src: string, title: string, category: string, location?: string, idx?: number }) {
     const cardRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: cardRef,
