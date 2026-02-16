@@ -15,7 +15,7 @@ PACKAGES & PRICING:
 
 BOOKING:
 - Direct them to the Inquire page at /inquire to book
-- Or email: hello@oyange.studio
+- Or email: martinaquila5@gmail.com
 
 GUIDELINES:
 - Be warm, approachable, and professional
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
         if (!apiKey || apiKey === "your_gemini_api_key_here") {
             return Response.json(
-                { reply: "The AI concierge is being set up. In the meantime, feel free to visit our Inquire page or email hello@oyange.studio!" },
+                { reply: "The AI concierge is being set up. In the meantime, feel free to visit our Inquire page or email martinaquila5@gmail.com!" },
                 { status: 200 }
             );
         }

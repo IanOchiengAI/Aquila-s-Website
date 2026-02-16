@@ -45,7 +45,7 @@ export default function InquirePage() {
                             </div>
                             <div>
                                 <span className="block text-[10px] font-semibold tracking-[0.3em] uppercase text-brand-gold mb-1">Email</span>
-                                <a href="mailto:hello@oyange.studio" className="text-xl font-display font-bold text-brand-green hover:text-brand-gold transition-colors">hello@oyange.studio</a>
+                                <a href="mailto:martinaquila5@gmail.com" className="text-xl font-display font-bold text-brand-green hover:text-brand-gold transition-colors">martinaquila5@gmail.com</a>
                             </div>
                         </div>
 
@@ -103,7 +103,7 @@ export default function InquirePage() {
                                     WhatsApp Us
                                 </a>
                                 <a
-                                    href="mailto:hello@oyange.studio"
+                                    href="mailto:martinaquila5@gmail.com"
                                     className="px-8 py-4 bg-brand-gold text-brand-green font-bold text-[12px] uppercase tracking-[0.3em] rounded-full hover:bg-brand-green hover:text-brand-gold transition-all shadow-lg"
                                 >
                                     Email Us

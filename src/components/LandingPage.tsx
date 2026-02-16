@@ -436,7 +436,6 @@ export default function LandingPage() {
                 </Link>
             </motion.div>
 
-            <BackToTop />
         </div>
     );
 }

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
-import { ArrowRight, Instagram, Linkedin, Twitter } from "lucide-react";
+import { ArrowRight, Instagram, Linkedin } from "lucide-react";
 
 const menuLinks = [
     { href: "/", label: "Home", sub: "Start Here" },
