@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 import { ArrowRight, Instagram, Linkedin, Twitter } from "lucide-react";
 
 const menuLinks = [
@@ -15,8 +16,16 @@ const menuLinks = [
 
 const socialLinks = [
     { href: "https://instagram.com/oyange_", icon: Instagram, label: "lnstagram" },
-    { href: "https://twitter.com/oyange_", icon: Twitter, label: "Twitter" },
-    { href: "https://linkedin.com/in/oyange-aquila", icon: Linkedin, label: "LinkedIn" },
+    {
+        href: "https://www.tiktok.com/@0yange_",
+        icon: (props: any) => (
+            <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+            </svg>
+        ),
+        label: "TikTok"
+    },
+    { href: "https://www.linkedin.com/in/oyange-aquila/", icon: Linkedin, label: "LinkedIn" },
 ];
 
 // Animation Variants
@@ -132,9 +141,16 @@ export default function MenuOverlay({ onClose }: { onClose: () => void }) {
 
                     <motion.div variants={itemVariants} className="flex justify-between items-end border-t border-white/10 pt-8">
                         <div className="flex flex-col">
-                            <span className="font-display text-2xl font-bold tracking-tighter">OYANGE</span>
+                            <div className="relative w-12 h-12 grayscale brightness-200 contrast-200">
+                                <Image
+                                    src="/assets/logo.jpg"
+                                    alt="Oyange Logo"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
                         </div>
-                        <span className="text-[10px] uppercase tracking-widest text-white/20">© 2026</span>
+                        <span className="text-[10px] uppercase tracking-widest text-white/20">© {new Date().getFullYear()}</span>
                     </motion.div>
                 </motion.div>
             </motion.div>

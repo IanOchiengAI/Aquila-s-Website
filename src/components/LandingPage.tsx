@@ -397,8 +397,8 @@ export default function LandingPage() {
                             <span className="text-[11px] font-semibold tracking-[0.4em] text-black uppercase">Social</span>
                             <div className="flex flex-col gap-3">
                                 <Link href="https://instagram.com/oyange_" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">Instagram</Link>
-                                <Link href="https://tiktok.com/@oyange_" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">TikTok</Link>
-                                <Link href="https://linkedin.com/in/oyange" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">LinkedIn</Link>
+                                <Link href="https://www.tiktok.com/@0yange_" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">TikTok</Link>
+                                <Link href="https://www.linkedin.com/in/oyange-aquila/" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">LinkedIn</Link>
                                 <Link href="https://wa.me/254700000000" target="_blank" className="text-sm text-muted-foreground hover:text-black transition-colors">WhatsApp</Link>
                             </div>
                         </div>
@@ -406,8 +406,15 @@ export default function LandingPage() {
                 </div>
 
                 <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-black/5 pt-12">
-                    <Link href="/" className="font-display text-4xl font-black tracking-tighter text-foreground">OYG</Link>
-                    <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-muted-foreground">© 2026 Oyange Nairobi, Kenya</span>
+                    <Link href="/" className="relative w-16 h-16 grayscale opacity-80 hover:opacity-100 transition-opacity">
+                        <Image
+                            src="/assets/logo.jpg"
+                            alt="Oyange Logo"
+                            fill
+                            className="object-contain"
+                        />
+                    </Link>
+                    <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-muted-foreground">© {new Date().getFullYear()} Oyange Nairobi, Kenya</span>
                 </div>
             </motion.footer>
 

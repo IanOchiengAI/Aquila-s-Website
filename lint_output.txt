@@ -1,0 +1,27 @@
+﻿
+> aquila-next@0.1.0 lint
+> eslint
+
+
+C:\Users\User\Desktop\Projects\aquila-next\src\app\about\page.tsx
+  38:25   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  38:178  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\User\Desktop\Projects\aquila-next\src\components\GalleryView.tsx
+   47:90  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  108:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\User\Desktop\Projects\aquila-next\src\components\LandingPage.tsx
+  427:179  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  473:48   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  528:51   warning  'idx' is defined but never used           @typescript-eslint/no-unused-vars
+  611:63   warning  'idx' is defined but never used           @typescript-eslint/no-unused-vars
+
+C:\Users\User\Desktop\Projects\aquila-next\src\sanity\lib\image.ts
+  6:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\User\Desktop\Projects\aquila-next\src\sanity\lib\queries.ts
+  44:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Ô£û 10 problems (8 errors, 2 warnings)
+
